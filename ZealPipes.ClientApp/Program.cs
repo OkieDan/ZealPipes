@@ -1,15 +1,9 @@
 ﻿using System;
-using System.IO.Pipes;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using System.Text.Json;
 using ZealPipes.Common.Models;
 using ZealPipes.Services;
-using System.Diagnostics;
 using ZealPipes.Services.Helpers;
 namespace ZealPipes.ClientApp
 {
@@ -23,23 +17,36 @@ namespace ZealPipes.ClientApp
                 .Build();
             IServiceCollection services = new ServiceCollection();
 
-            // Add services
-            services.AddSingleton<ZealSettings>(new ZealSettings(config));
-            services.AddSingleton<IConfiguration>(config);
+            // DI
+            services.AddSingleton(config);
             services.AddSingleton<ZealSettings>();
             services.AddSingleton<ProcessMonitor>();
-            services.AddSingleton<ZealMessageService>();
             services.AddSingleton<ZealPipeReader>();
+            services.AddSingleton<ZealMessageService>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             // Process messages
-            var myService = serviceProvider.GetService<ZealMessageService>();
-            myService.OnLogMessageReceived += MyService_OnLogTextReceived;
-            myService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
-            myService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
-            myService.StartProcessing();
+            var zealMessageService = serviceProvider.GetService<ZealMessageService>();
+            
+            // Subscribe to log messages
+            zealMessageService.OnLogMessageReceived += MyService_OnLogTextReceived;
+            // Subscribe to character updates (LogData and Gauge data should be fully populated)
+            zealMessageService.OnCharacterUpdated += MyService_OnCharacterUpdated;
+
+            // Uncommenting these would give you an update for every label and gauge value, but you will receive ~100x as many events compared to 'OnCharacterUpdated' event.
+            //myService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
+            //myService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
+
+            zealMessageService.StartProcessing();
             Console.ReadLine(); // Keep the application running
-            myService.StopProcessing();
+            zealMessageService.StopProcessing();
+        }
+
+        private static void MyService_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
+        {
+            Console.WriteLine($"Character.Name '{e.Character.Name}' on Character.ProcessId {e.ProcessId} has an update.");
+            Console.WriteLine($"Character.Detail.GaugeData serialized: {JsonSerializer.Serialize(e.Character.Detail.GaugeData)}");
+            Console.WriteLine($"Character.Detail.LabelData serialized: {JsonSerializer.Serialize(e.Character.Detail.LabelData)}");
         }
 
         private static void MyService_OnGaugeMessageReceived(object sender, ZealMessageService.GaugeMessageReceivedEventArgs e)

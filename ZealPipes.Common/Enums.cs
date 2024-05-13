@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZealPipes.Common
+﻿namespace ZealPipes.Common
 {
     public enum PipeMessageType
     {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZealPipes.Common.Models
+﻿namespace ZealPipes.Common.Models
 {
-    
+
 
     public class LogMessage
     {
@@ -20,6 +16,4 @@ namespace ZealPipes.Common.Models
 
         public string Value { get; set; }
     }
-
-
 }

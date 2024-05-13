@@ -9,12 +9,6 @@ namespace ZealPipes.Common.Models
     {
         public class LabelData
         {
-            //public LabelData(LabelType type, string value)
-            //{
-            //    JsonSerializer.Deserialize<LabelData>(value);
-            //    Type = type;
-            //    Value = value;
-            //}
             [JsonPropertyName("type")]
             public LabelType Type { get; set; }
             [JsonPropertyName("value")]

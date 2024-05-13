@@ -11,11 +11,6 @@ namespace ZealPipes.Common.Models
     {
         public class GaugeData
         {
-            //public GaugeData(GaugeType type, string value)
-            //{
-            //    Type = type;
-            //    Value = value;
-            //}
             [JsonPropertyName("type")]
 
             public GaugeType Type { get; set; }

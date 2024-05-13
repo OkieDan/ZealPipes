@@ -4,8 +4,6 @@ using System.Text;
 
 namespace ZealPipes.Common.Models
 {
-    
-
     public class LogMessage
     {
         public LogMessage(string character, string logText)

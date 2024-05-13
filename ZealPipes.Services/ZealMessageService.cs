@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Configuration;
 using ZealPipes.Common;
 using ZealPipes.Common.Models;
 using ZealPipes.Services.Helpers;
+using static ZealPipes.Common.Models.Character;
 using static ZealPipes.Services.Helpers.ZealPipeReader;
 namespace ZealPipes.Services
 {
@@ -17,6 +19,8 @@ namespace ZealPipes.Services
         public event EventHandler<LogMessageReceivedEventArgs> OnLogMessageReceived;
         public event EventHandler<LabelMessageReceivedEventArgs> OnLabelMessageReceived;
         public event EventHandler<GaugeMessageReceivedEventArgs> OnGaugeMessageReceived;
+        public event EventHandler<CharacterUpdatedEventArgs> OnCharacterUpdated;
+        public List<Character> CharacterList = new List<Character>();
 
         public ZealMessageService(IConfiguration configuration, ProcessMonitor processMonitor, ZealSettings zealSettings, ZealPipeReader zealPipeReader)
         {
@@ -37,7 +41,9 @@ namespace ZealPipes.Services
         private void ZealPipeReader_OnPipeMessageReceived(object sender, PipeMessageReceivedEventArgs e)
         {
             //Console.WriteLine($"Message from Zeal Pipe {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.DataLen}: {e.Message.Data}");
-            switch ((PipeMessageType)e.Message.Type)
+            PipeMessageType pipeMessageType = (PipeMessageType)e.Message.Type;
+            Character character;
+            switch (pipeMessageType)
             {
                 case PipeMessageType.LogText: // log
                     OnLogMessageReceived?.Invoke(this, new LogMessageReceivedEventArgs(
@@ -46,12 +52,30 @@ namespace ZealPipes.Services
                         ));
                     break;
                 case PipeMessageType.Label: // label
+                    var labelMessage = new LabelMessage(e.Message.Character, e.Message.Data);
+                    character = CharacterList.Where(x => x.ProcessId == e.ProcessId && x.Name == labelMessage.Character).FirstOrDefault();
+                    if (character == null)
+                    {
+                        character = new Character(labelMessage.Character, e.ProcessId);
+                        character.OnCharacterUpdated += Character_OnCharacterUpdated;
+                        CharacterList.Add(character);
+                    }
+                    character.UpdateCharacterData(labelMessage.Data);
                     OnLabelMessageReceived?.Invoke(this, new LabelMessageReceivedEventArgs(
                             e.ProcessId,
-                            new LabelMessage(e.Message.Character,  e.Message.Data)                            
+                            labelMessage
                         ));
                     break;
                 case PipeMessageType.Gauge: // gauge
+                    var gaugeMessage = new GaugeMessage(e.Message.Character, e.Message.Data);
+                    character = CharacterList.Where(x => x.ProcessId == e.ProcessId && x.Name == gaugeMessage.Character).FirstOrDefault();
+                    if (character == null)
+                    {
+                        character = new Character(gaugeMessage.Character, e.ProcessId);
+                        character.OnCharacterUpdated += Character_OnCharacterUpdated;
+                        CharacterList.Add(character);
+                    }
+                    character.UpdateCharacterData(gaugeMessage.Data);
                     OnGaugeMessageReceived?.Invoke(this, new GaugeMessageReceivedEventArgs(
                             e.ProcessId,
                             new GaugeMessage(e.Message.Character, e.Message.Data)                            
@@ -60,6 +84,11 @@ namespace ZealPipes.Services
 
             }
             // Further process the message here...
+        }
+
+        private void Character_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
+        {
+            OnCharacterUpdated?.Invoke(this, e);
         }
 
         public void StartProcessing()
@@ -76,5 +105,3 @@ namespace ZealPipes.Services
         }
     }
 }
-
-

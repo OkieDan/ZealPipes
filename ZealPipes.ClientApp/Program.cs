@@ -31,11 +31,11 @@ namespace ZealPipes.ClientApp
             // Subscribe to log messages
             zealMessageService.OnLogMessageReceived += MyService_OnLogTextReceived;
             // Subscribe to character updates (LogData and Gauge data should be fully populated)
-            zealMessageService.OnCharacterUpdated += MyService_OnCharacterUpdated;
+            //zealMessageService.OnCharacterUpdated += MyService_OnCharacterUpdated;
 
             // Uncommenting these would give you an update for every label and gauge value, but you will receive ~100x as many events compared to 'OnCharacterUpdated' event.
-            //myService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
-            //myService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
+            zealMessageService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
+            zealMessageService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
 
             zealMessageService.StartProcessing();
             Console.ReadLine(); // Keep the application running

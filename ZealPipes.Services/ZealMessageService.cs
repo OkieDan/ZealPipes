@@ -85,6 +85,8 @@ namespace ZealPipes.Services
                 case PipeMessageType.Player:
                     var playerMessage = new PlayerMessage(e.Message.Character, e.Message.Data);
                     character = CharacterList.Where(x => x.ProcessId == e.ProcessId && x.Name == playerMessage.Character).FirstOrDefault();
+                    character.UpdateCharacterData(playerMessage.Data);
+
                     OnPlayerMessageReceived?.Invoke(this, new PlayerMessageReceivedEventArgs(
                             e.ProcessId,
                             new PlayerMessage(e.Message.Character, e.Message.Data)

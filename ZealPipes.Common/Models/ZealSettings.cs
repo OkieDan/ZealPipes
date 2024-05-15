@@ -4,6 +4,13 @@ namespace ZealPipes.Common.Models
 {
     public class ZealSettings
     {
+        public ZealSettings(string eqProcessName, string pipePrefix = "zeal", int bufferSize = 32768)
+        {
+            PipePrefix = pipePrefix;
+            BufferSize = bufferSize;
+            EqProcessName = eqProcessName;
+        }
+
         public ZealSettings(IConfiguration configuration)
         {
             EqProcessName = configuration["ApplicationSettings:Zeal:EqProcessName"];

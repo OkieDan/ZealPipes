@@ -31,14 +31,15 @@ namespace ZealPipes.ClientApp
             var zealMessageService = serviceProvider.GetService<ZealMessageService>();
             
             // Subscribe to log messages
-          //  zealMessageService.OnLogMessageReceived += MyService_OnLogTextReceived;
+            //zealMessageService.OnLogMessageReceived += ZealMessageService_OnLogTextReceived;   // Requires "/log on" in game
             // Subscribe to character updates (LogData and Gauge data should be fully populated)
             //zealMessageService.OnCharacterUpdated += MyService_OnCharacterUpdated;
 
             // Uncommenting these would give you an update for every label and gauge value, but you will receive ~100x as many events compared to 'OnCharacterUpdated' event.
             //zealMessageService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
-            //zealMessageService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
-            zealMessageService.OnPlayerMessageReceived += ZealMessageService_OnPlayerMessageReceived;
+           
+            zealMessageService.OnGaugeMessageReceived += ZealMessageService_OnGaugeMessageReceived;
+            //zealMessageService.OnPlayerMessageReceived += ZealMessageService_OnPlayerMessageReceived;
 
             zealMessageService.StartProcessing();
             Console.ReadLine(); // Keep the application running
@@ -49,7 +50,7 @@ namespace ZealPipes.ClientApp
             Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Data.ZoneId}");
         }
 
-        private static void MyService_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
+        private static void ZealMessageService_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
         {
             Console.WriteLine($"Character.Name '{e.Character.Name}' on Character.ProcessId {e.ProcessId} has an update.");
             Console.WriteLine($"Character.Detail.GaugeData serialized: {JsonSerializer.Serialize(e.Character.Detail.GaugeData)}");
@@ -117,25 +118,22 @@ namespace ZealPipes.ClientApp
                 gauges.Add(id, newGauge);
             }
         }
-        private static void MyService_OnGaugeMessageReceived(object sender, ZealMessageService.GaugeMessageReceivedEventArgs e)
+        private static void ZealMessageService_OnGaugeMessageReceived(object sender, ZealMessageService.GaugeMessageReceivedEventArgs e)
         {
-           // if (e.Message.Data.Type == Common.GaugeType.Experience)
-            {
+                //  Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.Data.Type}: {e.Message.Data.Value}");
                 DrawGauge((int)e.Message.Data.Type, e.Message.Data.Value, 1000, 60);
                 Console.Write(" ");
                 Console.Write(e.Message.Data.Type.ToString());
                 Console.Write(" ");
                 Console.Write(e.Message.Data.Text);
                 Console.Write("                                                                             ");
-            }
-            //  Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.Data.Type}: {e.Message.Data.Value}");
         }
-        private static void MyService_OnLabelMessageReceived(object sender, ZealMessageService.LabelMessageReceivedEventArgs e)
+        private static void ZealMessageService_OnLabelMessageReceived(object sender, ZealMessageService.LabelMessageReceivedEventArgs e)
         {
             Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.Data.Type}: {e.Message.Data.Value}");
         }
 
-        private static void MyService_OnLogTextReceived(object sender, ZealMessageService.LogMessageReceivedEventArgs e)
+        private static void ZealMessageService_OnLogTextReceived(object sender, ZealMessageService.LogMessageReceivedEventArgs e)
         {
             Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.Value}");
 

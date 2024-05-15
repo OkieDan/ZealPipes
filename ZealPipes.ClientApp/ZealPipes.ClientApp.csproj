@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ZealConsoleUi.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">
@@ -122,5 +123,6 @@
       <Name>ZealPipes.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

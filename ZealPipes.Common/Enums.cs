@@ -4,7 +4,8 @@
     {
         LogText,
         Label,
-        Gauge
+        Gauge,
+        Player
     }
     public enum GaugeType
     {

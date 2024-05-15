@@ -34,12 +34,17 @@ namespace ZealPipes.ClientApp
             //zealMessageService.OnCharacterUpdated += MyService_OnCharacterUpdated;
 
             // Uncommenting these would give you an update for every label and gauge value, but you will receive ~100x as many events compared to 'OnCharacterUpdated' event.
-            zealMessageService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
-            zealMessageService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
+            //zealMessageService.OnLabelMessageReceived += MyService_OnLabelMessageReceived;
+            //zealMessageService.OnGaugeMessageReceived += MyService_OnGaugeMessageReceived;
+            zealMessageService.OnPlayerMessageReceived += ZealMessageService_OnPlayerMessageReceived;
 
             zealMessageService.StartProcessing();
             Console.ReadLine(); // Keep the application running
             zealMessageService.StopProcessing();
+        }
+        private static void ZealMessageService_OnPlayerMessageReceived(object sender, ZealMessageService.PlayerMessageReceivedEventArgs e)
+        {
+            Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Data.ZoneId}");
         }
 
         private static void MyService_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
@@ -64,6 +69,7 @@ namespace ZealPipes.ClientApp
             Console.WriteLine($"Message from ZealMessageService {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.Value}");
 
         }
+
     }
 }
 

@@ -19,6 +19,7 @@ namespace ZealPipes.Services
         public event EventHandler<LogMessageReceivedEventArgs> OnLogMessageReceived;
         public event EventHandler<LabelMessageReceivedEventArgs> OnLabelMessageReceived;
         public event EventHandler<GaugeMessageReceivedEventArgs> OnGaugeMessageReceived;
+        public event EventHandler<PlayerMessageReceivedEventArgs> OnPlayerMessageReceived;
         public event EventHandler<CharacterUpdatedEventArgs> OnCharacterUpdated;
         public List<Character> CharacterList = new List<Character>();
 
@@ -79,6 +80,14 @@ namespace ZealPipes.Services
                     OnGaugeMessageReceived?.Invoke(this, new GaugeMessageReceivedEventArgs(
                             e.ProcessId,
                             new GaugeMessage(e.Message.Character, e.Message.Data)                            
+                        ));
+                    break;
+                case PipeMessageType.Player:
+                    var playerMessage = new PlayerMessage(e.Message.Character, e.Message.Data);
+                    character = CharacterList.Where(x => x.ProcessId == e.ProcessId && x.Name == playerMessage.Character).FirstOrDefault();
+                    OnPlayerMessageReceived?.Invoke(this, new PlayerMessageReceivedEventArgs(
+                            e.ProcessId,
+                            new PlayerMessage(e.Message.Character, e.Message.Data)
                         ));
                     break;
 

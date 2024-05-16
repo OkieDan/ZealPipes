@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace ZealPipes.Common.Models
+namespace ZealPipes.Common
 {
     public class ZealSettings
     {

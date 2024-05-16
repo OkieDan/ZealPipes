@@ -17,6 +17,7 @@ namespace ZealPipes.Common.Models
         [JsonPropertyName("zone")]
         public string Character { get; }
         public PlayerData Data { get; }
+        public PipeMessageType Type { get; } = PipeMessageType.Player;
         public PlayerMessage(string character, string data)
         {
             Character = character;

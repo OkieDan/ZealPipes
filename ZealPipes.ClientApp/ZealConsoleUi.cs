@@ -14,19 +14,19 @@ namespace ZealPipes.ClientApp
         private static Dictionary<int, Gauge> gauges = new Dictionary<int, Gauge>();
         class Gauge
         {
-            public int Value { get; set; }
+            public decimal Value { get; set; }
             public int MaxValue { get; set; }
             public int Length { get; set; }
             public int TopPosition { get; set; }
         }
 
-        public static void DrawGauge(int id, int value, int maxValue, int length)
+        public static void DrawGauge(int id, decimal value, int maxValue, int length)
         {
             if (gauges.ContainsKey(id))
             {
                 Gauge gauge = gauges[id];
                 Console.SetCursorPosition(0, gauge.TopPosition);
-                int filledLength = (int)Math.Round((double)value / maxValue * length);
+                int filledLength = (int)Math.Round((decimal)value / maxValue * length);
                 int emptyLength = length - filledLength;
                 Console.Write("[");
                 for (int i = 0; i < filledLength; i++)
@@ -37,7 +37,8 @@ namespace ZealPipes.ClientApp
                 {
                     Console.Write(" "); // Empty block character
                 }
-                Console.Write($"] {value}/{maxValue}");
+                //Console.Write($"] {value}/{maxValue}");
+                Console.Write($"] {value}%");
 
                 gauge.Value = value;
                 gauge.MaxValue = maxValue;
@@ -66,7 +67,8 @@ namespace ZealPipes.ClientApp
                 {
                     Console.Write(" "); // Empty block character
                 }
-                Console.Write($"] {value}/{maxValue}");
+                //Console.Write($"] {value}/{maxValue}");
+                Console.Write($"] {value}%");
 
                 gauges.Add(id, newGauge);
             }

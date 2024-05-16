@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using ZealPipes.Common;
 using ZealPipes.Common.Models;
 using ZealPipes.Services.Helpers;
-using static ZealPipes.Common.Models.Character;
 using static ZealPipes.Services.Helpers.ZealPipeReader;
 namespace ZealPipes.Services
 {
@@ -20,8 +19,9 @@ namespace ZealPipes.Services
         public event EventHandler<LabelMessageReceivedEventArgs> OnLabelMessageReceived;
         public event EventHandler<GaugeMessageReceivedEventArgs> OnGaugeMessageReceived;
         public event EventHandler<PlayerMessageReceivedEventArgs> OnPlayerMessageReceived;
-        public event EventHandler<CharacterUpdatedEventArgs> OnCharacterUpdated;
-        public List<Character> CharacterList = new List<Character>();
+        public event EventHandler<ZealCharacter.ZealCharacterUpdatedEventArgs> OnCharacterUpdated;
+        public event EventHandler<PipeCmdMessageReceivedEventArgs> OnPipeCmdMessageReceived;
+        public List<ZealCharacter> CharacterList = new List<ZealCharacter>();
 
         public ZealMessageService(IConfiguration configuration, ProcessMonitor processMonitor, ZealSettings zealSettings, ZealPipeReader zealPipeReader)
         {
@@ -43,7 +43,7 @@ namespace ZealPipes.Services
         {
             //Console.WriteLine($"Message from Zeal Pipe {e.ProcessId}: {e.Message.Character}: {e.Message.Type}: {e.Message.DataLen}: {e.Message.Data}");
             PipeMessageType pipeMessageType = (PipeMessageType)e.Message.Type;
-            Character character;
+            ZealCharacter character;
             switch (pipeMessageType)
             {
                 case PipeMessageType.LogText: // log
@@ -57,7 +57,7 @@ namespace ZealPipes.Services
                     character = CharacterList.Where(x => x.ProcessId == e.ProcessId && x.Name == labelMessage.Character).FirstOrDefault();
                     if (character == null)
                     {
-                        character = new Character(labelMessage.Character, e.ProcessId);
+                        character = new ZealCharacter(labelMessage.Character, e.ProcessId);
                         character.OnCharacterUpdated += Character_OnCharacterUpdated;
                         CharacterList.Add(character);
                     }
@@ -72,7 +72,7 @@ namespace ZealPipes.Services
                     character = CharacterList.Where(x => x.ProcessId == e.ProcessId && x.Name == gaugeMessage.Character).FirstOrDefault();
                     if (character == null)
                     {
-                        character = new Character(gaugeMessage.Character, e.ProcessId);
+                        character = new ZealCharacter(gaugeMessage.Character, e.ProcessId);
                         character.OnCharacterUpdated += Character_OnCharacterUpdated;
                         CharacterList.Add(character);
                     }
@@ -92,12 +92,18 @@ namespace ZealPipes.Services
                             new PlayerMessage(e.Message.Character, e.Message.Data)
                         ));
                     break;
+                case PipeMessageType.PipeCmd:
+                    OnPipeCmdMessageReceived?.Invoke(this, new PipeCmdMessageReceivedEventArgs(
+                            e.ProcessId,
+                            new PipeCmdMessage(e.Message.Character, e.Message.Data)
+                        ));
+                    break;
 
             }
             // Further process the message here...
         }
 
-        private void Character_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
+        private void Character_OnCharacterUpdated(object sender, ZealCharacter.ZealCharacterUpdatedEventArgs e)
         {
             OnCharacterUpdated?.Invoke(this, e);
         }

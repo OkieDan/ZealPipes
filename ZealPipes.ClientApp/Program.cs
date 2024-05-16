@@ -5,6 +5,7 @@ using System.Text.Json;
 using ZealPipes.Common.Models;
 using ZealPipes.Services;
 using ZealPipes.Services.Helpers;
+using ZealPipes.Common;
 namespace ZealPipes.ClientApp
 {
     partial class Program
@@ -68,6 +69,7 @@ namespace ZealPipes.ClientApp
             zealMessageService.OnGaugeMessageReceived -= ZealMessageService_OnGaugeMessageReceived;
             zealMessageService.OnPlayerMessageReceived -= ZealMessageService_OnPlayerMessageReceived;
             zealMessageService.OnCharacterUpdated -= ZealMessageService_OnCharacterUpdated;
+            zealMessageService.OnPipeCmdMessageReceived -= ZealMessageService_OnPipeCmdMessageReceived;
         }
 
         private static void MenuHeader()
@@ -79,6 +81,7 @@ namespace ZealPipes.ClientApp
             Console.Write($"{(_lastMenuOption == ConsoleKey.D4 ? "  >" : "  ")}4:Character (Gauges, Labels, Player)");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D5 ? "  >" : "  ")}5:UI");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D6 ? "  >" : "  ")}6:Chat Log");
+            Console.Write($"{(_lastMenuOption == ConsoleKey.D7 ? "  >" : "  ")}7:/Pipe");
             Console.Write("   X:Exit\n");
         }
         private static bool ShowMenu(ZealMessageService zealMessageService)
@@ -130,11 +133,26 @@ namespace ZealPipes.ClientApp
                 ClearHandlers(zealMessageService);
                 zealMessageService.OnLogMessageReceived += ZealMessageService_OnLogMessageReceived;
             }
+            if (key == ConsoleKey.D7 || key == ConsoleKey.NumPad7)
+            {
+                _lastMenuOption = ConsoleKey.D7;
+                UseZealConsoleUi = false;
+                ClearHandlers(zealMessageService);
+                zealMessageService.OnPipeCmdMessageReceived += ZealMessageService_OnPipeCmdMessageReceived;
+            }
 
             return true;
         }
 
-        private static void ZealMessageService_OnCharacterUpdated(object sender, Character.CharacterUpdatedEventArgs e)
+        private static void ZealMessageService_OnPipeCmdMessageReceived(object sender, ZealMessageService.PipeCmdMessageReceivedEventArgs e)
+        {
+            if(_lastMenuOption == ConsoleKey.D7)
+            {
+                Console.WriteLine($"ZealService(PipeCmd)> {e.Message.Data.Text}");
+            }
+        }
+
+        private static void ZealMessageService_OnCharacterUpdated(object sender, ZealCharacter.ZealCharacterUpdatedEventArgs e)
         {
             if (_lastMenuOption == ConsoleKey.D4)
             {
@@ -150,7 +168,7 @@ namespace ZealPipes.ClientApp
         {
             if (_lastMenuOption == ConsoleKey.D5)
             {
-                ZealConsoleUi.DrawGauge((int)e.Message.Data.Type, e.Message.Data.Value, 1000, 60);
+                ZealConsoleUi.DrawGauge((int)e.Message.Data.Type, Math.Round(e.Message.Data.Value / 10), 100, 60);
                 Console.Write(" ");
                 Console.Write(e.Message.Data.Type.ToString());
                 Console.Write(" ");
@@ -158,14 +176,14 @@ namespace ZealPipes.ClientApp
                 Console.Write("                                                                             ");
             }
             else if (_lastMenuOption == ConsoleKey.D2)
-                Console.WriteLine($"ZealService> proc:{e.ProcessId}  char:{e.Message.Character}: {e.Message.Type}: {e.Message.Data.Type}: {e.Message.Data.Value}");
+                Console.WriteLine($"ZealService(Gauge)> proc:{e.ProcessId}  char:{e.Message.Character}: {e.Message.Type}: {e.Message.Data.Type}: {e.Message.Data.Value}");
         }
 
         private static void ZealMessageService_OnPlayerMessageReceived(object sender, ZealMessageService.PlayerMessageReceivedEventArgs e)
         {
             if (_lastMenuOption == ConsoleKey.D3)
             {
-                Console.WriteLine($"ZealService> proc:{e.ProcessId}  char:{e.Message.Character}  zoneId:{e.Message.Data.ZoneId}");
+                Console.WriteLine($"ZealService(Player)> proc:{e.ProcessId}  char:{e.Message.Character}  zoneId:{e.Message.Data.ZoneId}");
             }
         }
 
@@ -173,7 +191,7 @@ namespace ZealPipes.ClientApp
         {
             if (_lastMenuOption == ConsoleKey.D1)
             {
-                Console.WriteLine($"ZealService> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  labelType:{e.Message.Data.Type}  value:{e.Message.Data.Value}");
+                Console.WriteLine($"ZealService(Label)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  labelType:{e.Message.Data.Type}  value:{e.Message.Data.Value}");
             }
         }
 
@@ -181,7 +199,7 @@ namespace ZealPipes.ClientApp
         {
             if (!UseZealConsoleUi)
             {
-                Console.WriteLine($"ZealService> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  text:{e.Message.Data.Text}");
+                Console.WriteLine($"ZealService(Log)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  text:{e.Message.Data.Text}");
             }
         }
         #endregion

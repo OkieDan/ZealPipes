@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System;
-using ZealPipes.Common.Models;
 using System.Diagnostics;
+using ZealPipes.Common;
 
 namespace ZealPipes.Services.Helpers
 {

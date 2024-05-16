@@ -9,29 +9,30 @@ using static ZealPipes.Common.Models.PlayerMessage;
 namespace ZealPipes.Common.Models
 {
 
-    public class Character
+    public class ZealCharacter
     {
         public string Name { get; set; }
         public int ProcessId { get; set; }
-        public CharacterDetail Detail { get; set; } = new CharacterDetail();
-        internal CharacterDetail _partialCharacterDetail { get; set; } = new CharacterDetail();
-        public event EventHandler<CharacterUpdatedEventArgs> OnCharacterUpdated;
+        public ZealCharacterDetail Detail { get; set; } = new ZealCharacterDetail();
+        internal ZealCharacterDetail _partialCharacterDetail { get; set; } = new ZealCharacterDetail();
+        public event EventHandler<ZealCharacterUpdatedEventArgs> OnCharacterUpdated;
 
-        public Character(string name, int processId)
+        public class ZealCharacterUpdatedEventArgs : EventArgs
         {
-            Name = name;
-            ProcessId = processId;
-        }
-        public class CharacterUpdatedEventArgs : EventArgs
-        {
-            public Character Character { get; private set; }
+            public ZealCharacter Character { get; private set; }
             public int ProcessId { get; private set; }
 
-            public CharacterUpdatedEventArgs(int processId, Character character)
+            public ZealCharacterUpdatedEventArgs(int processId, ZealCharacter character)
             {
                 ProcessId = processId;
                 Character = character;
             }
+        }
+
+        public ZealCharacter(string name, int processId)
+        {
+            Name = name;
+            ProcessId = processId;
         }
 
         private void AddGaugeFragment(GaugeData data)
@@ -67,9 +68,9 @@ namespace ZealPipes.Common.Models
             _partialCharacterDetail.GaugeData.Clear();
             _partialCharacterDetail.LabelData.Clear();
             this.Detail.PlayerData = data;
-            OnCharacterUpdated?.Invoke(this, new CharacterUpdatedEventArgs(ProcessId, this));
+            OnCharacterUpdated?.Invoke(this, new ZealCharacterUpdatedEventArgs(ProcessId, this));
         }
-        public class CharacterDetail
+        public class ZealCharacterDetail
         {
             public List<GaugeData> GaugeData { get; internal set; } = new List<GaugeData>();
             public List<LabelData> LabelData { get; internal set; } = new List<LabelData>();

@@ -14,7 +14,7 @@ namespace ZealPipes.Common.Models
             public string Text { get; set; }
             
             [JsonPropertyName("value")]
-            public int Value { get; set; }
+            public decimal Value { get; set; }
         }
         public GaugeMessage(string character, string pipeMessageData)
         {

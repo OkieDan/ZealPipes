@@ -5,7 +5,8 @@
         LogText,
         Label,
         Gauge,
-        Player
+        Player,
+        PipeCmd
     }
     public enum GaugeType
     {

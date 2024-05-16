@@ -7,17 +7,14 @@ namespace ZealPipes.Common.Models
     {
         public class GaugeData
         {
-            //public GaugeData(GaugeType type, string value)
-            //{
-            //    Type = type;
-            //    Value = value;
-            //}
             [JsonPropertyName("type")]
-
             public GaugeType Type { get; set; }
-            [JsonPropertyName("value")]
 
-            public string Value { get; set; }
+            [JsonPropertyName("text")]
+            public string Text { get; set; }
+            
+            [JsonPropertyName("value")]
+            public decimal Value { get; set; }
         }
         public GaugeMessage(string character, string pipeMessageData)
         {

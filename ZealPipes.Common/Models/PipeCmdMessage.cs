@@ -6,27 +6,24 @@ namespace ZealPipes.Common.Models
 {
 
 
-    public class LogMessage
+    public class PipeCmdMessage
     {
-        public class LogData
+        public class PipeCmdData
         {
-            [JsonPropertyName("type")]
-            public LogType Type { get; set; }
-
             [JsonPropertyName("text")]
             public string Text { get; set; }    // chat message content            
         }
 
-        public LogMessage(string character, string pipeMessageData)
+        public PipeCmdMessage(string character, string pipeMessageData)
         {
-            Type = PipeMessageType.LogText;
+            Type = PipeMessageType.PipeCmd;
             Character = character;
-            Data = JsonSerializer.Deserialize<LogData>(pipeMessageData);
+            Data.Text = pipeMessageData;
         }
         public PipeMessageType Type { get; set; }
 
         public string Character { get; set; }
 
-        public LogData Data { get; set; }
+        public PipeCmdData Data { get; set; } = new PipeCmdData();
     }
 }

@@ -183,7 +183,7 @@ namespace ZealPipes.ClientApp
         {
             if (_lastMenuOption == ConsoleKey.D3)
             {
-                Console.WriteLine($"ZealService(Player)> proc:{e.ProcessId}  char:{e.Message.Character}  zoneId:{e.Message.Data.ZoneId}");
+                Console.WriteLine($"ZealService(Player)> proc:{e.ProcessId}  char:{e.Message.Character}  zoneId:{e.Message.Data.ZoneId} position:{e.Message.Data.Position.X} {e.Message.Data.Position.Y} {e.Message.Data.Position.Z} heading:{e.Message.Data.heading}");
             }
         }
 

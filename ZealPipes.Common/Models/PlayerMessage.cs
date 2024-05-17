@@ -6,12 +6,25 @@ using System.Text.Json.Serialization;
 
 namespace ZealPipes.Common.Models
 {
+    public class Vec3
+    {
+        [JsonPropertyName("x")]
+        public float X { get; set; }
+        [JsonPropertyName("y")]
+        public float Y { get; set; }
+        [JsonPropertyName("z")]
+        public float Z { get; set; }
+    }
     public class PlayerMessage
     {
         public class PlayerData
         {
             [JsonPropertyName("zone")]
             public int ZoneId { get; set; }
+            [JsonPropertyName("location")]
+            public Vec3 Position { get; set; }
+            [JsonPropertyName("heading")]
+            public float heading { get; set; }
         }
 
         [JsonPropertyName("zone")]

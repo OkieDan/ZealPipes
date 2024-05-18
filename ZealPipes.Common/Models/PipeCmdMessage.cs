@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using static ZealPipes.Common.Models.GaugeMessage;
+using static ZealPipes.Common.Models.LogMessage;
 
 namespace ZealPipes.Common.Models
 {
@@ -18,7 +19,7 @@ namespace ZealPipes.Common.Models
         {
             Type = PipeMessageType.PipeCmd;
             Character = character;
-            Data.Text = pipeMessageData;
+            Data = JsonSerializer.Deserialize<PipeCmdData>(pipeMessageData);
         }
         public PipeMessageType Type { get; set; }
 

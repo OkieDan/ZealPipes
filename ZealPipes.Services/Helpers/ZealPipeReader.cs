@@ -33,11 +33,11 @@ namespace ZealPipes.Services.Helpers
         {
             _zealSettings = zealSettings;
         }
-        internal async void StopReading(int processId)
+        internal void StopReading(int processId)
         {
             _keepReading = false;
         }
-        internal async void StartReading(int processId)
+        internal async Task StartReading(int processId)
         {
             if (_connectedProcesses.Contains(processId))
             {

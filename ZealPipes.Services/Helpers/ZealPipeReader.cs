@@ -33,11 +33,11 @@ namespace ZealPipes.Services.Helpers
         {
             _zealSettings = zealSettings;
         }
-        internal async void StopReading(int processId)
+        internal void StopReading(int processId)
         {
             _keepReading = false;
         }
-        internal async void StartReading(int processId)
+        internal async Task StartReading(int processId)
         {
             if (_connectedProcesses.Contains(processId))
             {
@@ -47,7 +47,6 @@ namespace ZealPipes.Services.Helpers
             _connectedProcesses.Add(processId);
             _keepReading = true;
             string pipeName = $"{_zealSettings.PipePrefix}_{processId}";
-
             try
             {
                 using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.In))
@@ -66,12 +65,14 @@ namespace ZealPipes.Services.Helpers
                             if (bytesRead > 0)
                             {
                                 string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                                
                                 foreach (string json in splitter.SplitJson(message))
                                 {
                                     try
                                     {
                                         PipeMessage pm = JsonSerializer.Deserialize<PipeMessage>(json);
-                                        //Console.WriteLine($"Received from process {processId} {pd.Character}: {pd.Data}");
+                                        if (bytesRead >= _zealSettings.BufferSize / 2 && ((PipeMessageType)pm.Type == PipeMessageType.Gauge || (PipeMessageType)pm.Type == PipeMessageType.Label))
+                                            continue;
                                         OnPipeMessageReceived?.Invoke(this, new PipeMessageReceivedEventArgs(processId, pm));
                                     }
                                     catch (JsonException ex)
@@ -84,7 +85,7 @@ namespace ZealPipes.Services.Helpers
                             }
                             else
                             {
-                                await Task.Delay(10); // Wait for data if none available
+                                await Task.Delay(1); // Wait for data if none available
                             }
                         }
                         else

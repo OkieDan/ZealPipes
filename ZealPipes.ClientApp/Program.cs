@@ -168,15 +168,23 @@ namespace ZealPipes.ClientApp
         {
             if (_lastMenuOption == ConsoleKey.D5)
             {
-                ZealConsoleUi.DrawGauge((int)e.Message.Data.Type, Math.Round(e.Message.Data.Value / 10), 100, 60);
-                Console.Write(" ");
-                Console.Write(e.Message.Data.Type.ToString());
-                Console.Write(" ");
-                Console.Write(e.Message.Data.Text);
-                Console.Write("                                                                             ");
+                foreach (var data in e.Message.Data)
+                {
+                    ZealConsoleUi.DrawGauge((int)data.Type, Math.Round(data.Value / 10), 100, 60);
+                    Console.Write(" ");
+                    Console.Write(data.Type.ToString());
+                    Console.Write(" ");
+                    Console.Write(data.Text);
+                    Console.Write("                                                                             ");
+                }
             }
             else if (_lastMenuOption == ConsoleKey.D2)
-                Console.WriteLine($"ZealService(Gauge)> proc:{e.ProcessId}  char:{e.Message.Character}: {e.Message.Type}: {e.Message.Data.Type}: {e.Message.Data.Value}");
+            {
+                foreach (var data in e.Message.Data)
+                {
+                    Console.WriteLine($"ZealService(Gauge)> proc:{e.ProcessId}  char:{e.Message.Character}: {e.Message.Type}: {data.Type}: {data.Value}");
+                }
+            }
         }
 
         private static void ZealMessageService_OnPlayerMessageReceived(object sender, ZealMessageService.PlayerMessageReceivedEventArgs e)
@@ -191,7 +199,10 @@ namespace ZealPipes.ClientApp
         {
             if (_lastMenuOption == ConsoleKey.D1)
             {
-                Console.WriteLine($"ZealService(Label)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  labelType:{e.Message.Data.Type}  value:{e.Message.Data.Value}");
+                foreach (var data in e.Message.Data)
+                {
+                    Console.WriteLine($"ZealService(Label)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  labelType:{data.Type}  value:{data.Value}");
+                }
             }
         }
 

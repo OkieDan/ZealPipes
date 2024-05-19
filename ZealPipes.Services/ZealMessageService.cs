@@ -76,13 +76,19 @@ namespace ZealPipes.Services
 
                 case PipeMessageType.Label:
                     var labelMessage = new LabelMessage(characterName, data);
-                    character.UpdateCharacterData(labelMessage.Data);
+                    foreach (var label in labelMessage.Data)
+                    {
+                        character.UpdateCharacterData(label);
+                    }
                     OnLabelMessageReceived?.Invoke(this, new LabelMessageReceivedEventArgs(processId, labelMessage));
                     break;
 
                 case PipeMessageType.Gauge:
                     var gaugeMessage = new GaugeMessage(characterName, data);
-                    character.UpdateCharacterData(gaugeMessage.Data);
+                    foreach (var gauge in gaugeMessage.Data)
+                    {
+                        character.UpdateCharacterData(gauge);
+                    }
                     OnGaugeMessageReceived?.Invoke(this, new GaugeMessageReceivedEventArgs(processId, gaugeMessage));
                     break;
 

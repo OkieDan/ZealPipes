@@ -47,7 +47,6 @@ namespace ZealPipes.Services.Helpers
             _connectedProcesses.Add(processId);
             _keepReading = true;
             string pipeName = $"{_zealSettings.PipePrefix}_{processId}";
-            int i = 0;
             try
             {
                 using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.In))
@@ -65,15 +64,6 @@ namespace ZealPipes.Services.Helpers
 
                             if (bytesRead > 0)
                             {
-                                i++;
-                                if (i % 100 == 0)
-                                {
-                                    Console.WriteLine($"{bytesRead}");
-                                }
-                                Console.Write(".");
-                                if (bytesRead >= _zealSettings.BufferSize)
-                                    Console.Write("\n");
-
                                 string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                                 
                                 foreach (string json in splitter.SplitJson(message))

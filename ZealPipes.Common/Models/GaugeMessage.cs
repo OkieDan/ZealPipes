@@ -20,12 +20,12 @@ namespace ZealPipes.Common.Models
         {
             Type = PipeMessageType.Gauge;
             Character = character;
-            Data = JsonSerializer.Deserialize<GaugeData>(pipeMessageData);
+            Data = JsonSerializer.Deserialize<GaugeData[]>(pipeMessageData);
         }
         public PipeMessageType Type { get; set; }
 
         public string Character { get; set; }
 
-        public GaugeData Data { get; set; }
+        public GaugeData[] Data { get; set; }
     }
 }

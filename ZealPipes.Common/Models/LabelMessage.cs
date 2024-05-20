@@ -22,12 +22,12 @@ namespace ZealPipes.Common.Models
         {
             Type = PipeMessageType.Label;
             Character = character;
-            Data = JsonSerializer.Deserialize<LabelData>(pipeMessageData);            
+            Data = JsonSerializer.Deserialize<LabelData[]>(pipeMessageData);            
         }
         public PipeMessageType Type { get; set; }
 
         public string Character { get; set; }
 
-        public LabelData Data { get; set; }
+        public LabelData[] Data { get; set; }
     }
 }

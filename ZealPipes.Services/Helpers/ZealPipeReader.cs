@@ -7,6 +7,7 @@ using System;
 using ZealPipes.Services.Models;
 using System.Text.Json;
 using ZealPipes.Common;
+using System.Diagnostics;
 
 namespace ZealPipes.Services.Helpers
 {
@@ -41,6 +42,7 @@ namespace ZealPipes.Services.Helpers
         {
             if (_connectedProcesses.Contains(processId))
             {
+                Debug.WriteLine($"Already reading Zeal pipe for ProcessId {processId}.");
                 Console.WriteLine($"Already reading Zeal pipe for ProcessId {processId}.");
                 return;
             }
@@ -78,6 +80,7 @@ namespace ZealPipes.Services.Helpers
                                     catch (JsonException ex)
                                     {
                                         // Handle JSON parsing error
+                                        Debug.WriteLine("Error parsing JSON: " + ex.Message);
                                         Console.WriteLine("Error parsing JSON: " + ex.Message);
                                     }
                                 }
@@ -101,11 +104,13 @@ namespace ZealPipes.Services.Helpers
             catch (IOException ex) when (ex.InnerException is ObjectDisposedException)
             {
                 // Handle disconnection: Remove the disconnected process from the active connections list
+                Debug.WriteLine($"Process {processId} disconnected.");
                 Console.WriteLine($"Process {processId} disconnected.");
                 _connectedProcesses.Remove(processId);
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Exception for process {processId}: {ex.Message}");
                 Console.WriteLine($"Exception for process {processId}: {ex.Message}");
             }
             finally

@@ -11,6 +11,12 @@ namespace ZealPipes.Common.Models
 
     public class ZealCharacter
     {
+        public class ZealCharacterDetail
+        {
+            public List<GaugeData> GaugeData { get; internal set; } = new List<GaugeData>();
+            public List<LabelData> LabelData { get; internal set; } = new List<LabelData>();
+            public PlayerData PlayerData { get; internal set; } = new PlayerData();
+        }
         public string Name { get; set; }
         public int ProcessId { get; set; }
         public ZealCharacterDetail Detail { get; set; } = new ZealCharacterDetail();
@@ -69,12 +75,6 @@ namespace ZealPipes.Common.Models
             _partialCharacterDetail.LabelData.Clear();
             this.Detail.PlayerData = data;
             OnCharacterUpdated?.Invoke(this, new ZealCharacterUpdatedEventArgs(ProcessId, this));
-        }
-        public class ZealCharacterDetail
-        {
-            public List<GaugeData> GaugeData { get; internal set; } = new List<GaugeData>();
-            public List<LabelData> LabelData { get; internal set; } = new List<LabelData>();
-            public PlayerData PlayerData { get; internal set; } = new PlayerData();
         }
     }
 }

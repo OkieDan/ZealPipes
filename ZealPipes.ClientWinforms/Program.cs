@@ -6,68 +6,63 @@ using ZealPipes.ClientWinforms.Views;
 using ZealPipes.Common;
 using ZealPipes.Services.Helpers;
 using ZealPipes.Services;
+using ZealPipes.ClientWinforms.Presenters;
+using System.Diagnostics;
 
 namespace ZealPipes.ClientWinforms
 {
-    internal static class Program
+    static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        public static IServiceProvider ServiceProvider { get; private set; }
+
         [STAThread]
         static void Main()
         {
+            // Initialize WinForms application
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            ApplicationConfiguration.Initialize();
+            // Build DI and configuration
+            ConfigureServices();
 
+            // Get the MainForm from DI and run it
+            var mainForm = ServiceProvider.GetService<MainForm>();
+            var svc = ServiceProvider.GetService<ZealMessageService>();
+            try
+            {
+                Application.Run(mainForm);
+            }            
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex.Message}: {ex.StackTrace}");
+                Console.WriteLine($"{ex.Message}: {ex.StackTrace}");
+            }
+            finally
+            {
+                svc.StopProcessing();
+            }
+        }
+
+        private static void ConfigureServices()
+        {
+            // Build configuration
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
             IServiceCollection services = new ServiceCollection();
 
-            #region What all programs should use
             // Add ZealSettings, ProcessMonitor, ZealPipeReader, ZealMessageService to DI
             services.AddSingleton(config);
-            services.AddSingleton<ZealSettings>();                                  // Use to get Zeal settings from appsettings.json (otherwise comment & use next line)
-            //services.AddSingleton(new ZealSettings("eqgame", "zeal", 32768));     // pass settings w/o appsettings.json here
+            services.AddSingleton<ZealSettings>();  // Use to get Zeal settings from appsettings.json
             services.AddSingleton<ProcessMonitor>();
             services.AddSingleton<ZealPipeReader>();
             services.AddSingleton<ZealMessageService>();
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
 
+            // Register MainForm and its presenter
+            services.AddSingleton<MainForm>();
+            services.AddSingleton<MainPresenter>();
 
-
-            // Process messages
-            var zealMessageService = serviceProvider.GetService<ZealMessageService>();
-
-            // Subscribe to log messages
-            //zealMessageService.OnLogMessageReceived += ZealMessageService_OnLogMessageReceived;
-
-            // Subscribe to player messages (currently only ZoneId)
-            //zealMessageService.OnPlayerMessageReceived += ZealMessageService_OnPlayerMessageReceived;
-
-            // Subscribe to character updates (Label and Gauge data should be fully populated)
-            //zealMessageService.OnCharacterUpdated += ZealMessageService_OnCharacterUpdated;
-
-            // Uncommenting these would give you an update for every label and gauge value, but you will receive ~100x as many events compared to 'OnCharacterUpdated' event.
-            //zealMessageService.OnLabelMessageReceived += ZealMessageService_OnLabelMessageReceived;
-            //zealMessageService.OnGaugeMessageReceived += ZealMessageService_OnGaugeMessageReceived;
-
-            zealMessageService.StartProcessing();
-
-            #endregion
-
-            #region Client Specific
-            Console.Clear();
-            //while (ShowMenu(zealMessageService)) ;
-            #endregion
-
-            zealMessageService.StopProcessing();
-
-
-
-
-            Application.Run(new MainFormView());
+            ServiceProvider = services.BuildServiceProvider();
         }
     }
 }

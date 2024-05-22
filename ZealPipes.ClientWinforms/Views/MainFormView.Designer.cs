@@ -1,6 +1,6 @@
 ﻿namespace ZealPipes.ClientWinforms.Views;
 
-partial class MainFormView
+partial class MainForm
 {
     /// <summary>
     ///  Required designer variable.
@@ -30,14 +30,15 @@ partial class MainFormView
     {
         SuspendLayout();
         // 
-        // Form1
+        // MainForm
         // 
-        AutoScaleDimensions = new SizeF(12F, 30F);
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(1584, 861);
-        Font = new Font("Segoe UI", 16F);
-        Margin = new Padding(5, 6, 5, 6);
-        Name = "Form1";
+        BackColor = Color.FromArgb(64, 64, 64);
+        ClientSize = new Size(1477, 733);
+        Font = new Font("Segoe UI", 9F);
+        ForeColor = Color.White;
+        Name = "MainForm";
         Text = "Zeal EQ";
         ResumeLayout(false);
     }

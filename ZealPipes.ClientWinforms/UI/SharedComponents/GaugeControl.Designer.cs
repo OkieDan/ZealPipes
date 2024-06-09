@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            progressBar1 = new ProgressBar();
             label2 = new Label();
+            zealProgressBar1 = new ZealProgressBar();
             SuspendLayout();
             // 
             // label1
@@ -44,21 +44,11 @@
             label1.TabIndex = 0;
             label1.Text = "F1";
             // 
-            // progressBar1
-            // 
-            progressBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            progressBar1.Location = new Point(22, 3);
-            progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(328, 10);
-            progressBar1.Style = ProgressBarStyle.Continuous;
-            progressBar1.TabIndex = 1;
-            progressBar1.Value = 80;
-            // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Dock = DockStyle.Right;
-            label2.Location = new Point(353, 0);
+            label2.Location = new Point(179, 0);
             label2.Margin = new Padding(0);
             label2.Name = "label2";
             label2.Size = new Size(35, 15);
@@ -66,16 +56,28 @@
             label2.Text = "100%";
             label2.TextAlign = ContentAlignment.TopRight;
             // 
+            // zealProgressBar1
+            // 
+            zealProgressBar1.Location = new Point(19, 2);
+            zealProgressBar1.Margin = new Padding(0);
+            zealProgressBar1.MaximumSecondaryValue = 100;
+            zealProgressBar1.MaximumValue = 100;
+            zealProgressBar1.Name = "zealProgressBar1";
+            zealProgressBar1.SecondaryValue = 100;
+            zealProgressBar1.Size = new Size(160, 13);
+            zealProgressBar1.TabIndex = 3;
+            zealProgressBar1.Value = 75;
+            // 
             // GaugeControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(zealProgressBar1);
             Controls.Add(label2);
-            Controls.Add(progressBar1);
             Controls.Add(label1);
             Margin = new Padding(0);
             Name = "GaugeControl";
-            Size = new Size(388, 15);
+            Size = new Size(214, 15);
             Load += GaugeControl_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -84,7 +86,7 @@
         #endregion
 
         private Label label1;
-        private ProgressBar progressBar1;
         private Label label2;
+        private ZealProgressBar zealProgressBar1;
     }
 }

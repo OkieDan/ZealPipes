@@ -45,7 +45,7 @@
             lblPlayerName.Location = new Point(0, 0);
             lblPlayerName.Margin = new Padding(2, 0, 2, 0);
             lblPlayerName.Name = "lblPlayerName";
-            lblPlayerName.Size = new Size(159, 12);
+            lblPlayerName.Size = new Size(155, 12);
             lblPlayerName.TabIndex = 0;
             lblPlayerName.Text = "Player Name";
             lblPlayerName.TextAlign = ContentAlignment.TopCenter;
@@ -86,9 +86,10 @@
             XpGauge.Location = new Point(2, 53);
             XpGauge.Margin = new Padding(0, 0, 2, 0);
             XpGauge.Name = "XpGauge";
-            XpGauge.Size = new Size(157, 15);
+            XpGauge.PrimaryValue = 0;
+            XpGauge.SecondaryValue = 0;
+            XpGauge.Size = new Size(153, 15);
             XpGauge.TabIndex = 5;
-            XpGauge.Value = 0;
             // 
             // HpGauge
             // 
@@ -98,9 +99,10 @@
             HpGauge.Location = new Point(2, 14);
             HpGauge.Margin = new Padding(0, 0, 2, 0);
             HpGauge.Name = "HpGauge";
-            HpGauge.Size = new Size(157, 16);
+            HpGauge.PrimaryValue = 0;
+            HpGauge.SecondaryValue = 0;
+            HpGauge.Size = new Size(153, 16);
             HpGauge.TabIndex = 5;
-            HpGauge.Value = 0;
             // 
             // ManaGauge
             // 
@@ -110,9 +112,10 @@
             ManaGauge.Location = new Point(2, 27);
             ManaGauge.Margin = new Padding(0, 0, 2, 0);
             ManaGauge.Name = "ManaGauge";
-            ManaGauge.Size = new Size(157, 16);
+            ManaGauge.PrimaryValue = 0;
+            ManaGauge.SecondaryValue = 0;
+            ManaGauge.Size = new Size(153, 16);
             ManaGauge.TabIndex = 5;
-            ManaGauge.Value = 0;
             // 
             // EnduranceGauge
             // 
@@ -122,9 +125,10 @@
             EnduranceGauge.Location = new Point(2, 40);
             EnduranceGauge.Margin = new Padding(0, 0, 2, 0);
             EnduranceGauge.Name = "EnduranceGauge";
-            EnduranceGauge.Size = new Size(157, 16);
+            EnduranceGauge.PrimaryValue = 0;
+            EnduranceGauge.SecondaryValue = 0;
+            EnduranceGauge.Size = new Size(153, 16);
             EnduranceGauge.TabIndex = 5;
-            EnduranceGauge.Value = 0;
             // 
             // PlayerControl
             // 
@@ -142,7 +146,7 @@
             Font = new Font("Segoe UI", 7F);
             Margin = new Padding(2);
             Name = "PlayerControl";
-            Size = new Size(159, 152);
+            Size = new Size(155, 152);
             ResumeLayout(false);
             PerformLayout();
         }

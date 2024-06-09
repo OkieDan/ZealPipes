@@ -10,5 +10,6 @@ public interface IMainView
     void UpdateLabelData(string labelData);
     void SetBackgroundImage(Image image);
     void ShowMessage(string message);
+    void UpdateCharacterDropdown(List<string> characterNames);
 }
 

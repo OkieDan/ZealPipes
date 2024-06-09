@@ -40,10 +40,10 @@ namespace ZealPipes.ClientWinforms.UI.Default
             //}
             lblPlayerName.Text = character.Name;
             lblPlayerLevel.Text = $"Level: {character.Level}";
-            HpGauge.Value = character.HPPerc;
-            ManaGauge.Value = character.ManaPerc;
-            EnduranceGauge.Value = character.STAPerc;
-            XpGauge.Value = character.ExpPerc;
+            HpGauge.PrimaryValue = character.HPPerc;
+            ManaGauge.PrimaryValue = character.ManaPerc;
+            EnduranceGauge.PrimaryValue = character.STAPerc;
+            XpGauge.PrimaryValue = character.ExpPerc;
             lblPlayerLevel.Text = character.Level.ToString();
             lblPlayerClass.Text = character.Class;
             lblPlayerDiety.Text = character.Deity;

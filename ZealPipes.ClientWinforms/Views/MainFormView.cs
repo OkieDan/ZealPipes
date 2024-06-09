@@ -2,6 +2,7 @@ using System.Diagnostics;
 using ZealPipes.ClientWinforms.Interfaces;
 using ZealPipes.ClientWinforms.Models;
 using ZealPipes.ClientWinforms.Presenters;
+using ZealPipes.ClientWinforms.UI.Default;
 using ZealPipes.ClientWinforms.UI.Factories;
 using ZealPipes.ClientWinforms.UI.Interfaces;
 
@@ -12,6 +13,8 @@ public partial class MainForm : Form, IMainView
     private readonly MainPresenter _presenter;
     private IPlayerControl _playerControl;
     private Bitmap backgroundBuffer;
+    private ComboBox characterDropdown;
+    private GroupControl _groupControl;
 
     public MainForm(MainPresenter presenter)
     {
@@ -24,10 +27,26 @@ public partial class MainForm : Form, IMainView
         UpdateStyles();
 
         // Use the factory to create the desired version of PlayerControl
-        _playerControl = PlayerControlFactory.CreatePlayerControl("Default"); // or "CustomTheme"
-        
+        _playerControl = PlayerControlFactory.CreatePlayerControl("Default"); // or "CustomTheme"        
         Controls.Add(_playerControl.GetControl());
+
+        _groupControl = new GroupControl();
+        Controls.Add(_groupControl);
+
+        characterDropdown = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDownList };
+        characterDropdown.SelectedIndexChanged += CharacterDropdown_SelectedIndexChanged;
+        Controls.Add(characterDropdown);
+
     }
+
+    private void CharacterDropdown_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (characterDropdown.SelectedItem != null)
+        {
+            _presenter.SetSelectedCharacter(characterDropdown.SelectedItem.ToString());
+        }
+    }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
@@ -54,9 +73,11 @@ public partial class MainForm : Form, IMainView
             this.Invoke(new Action(() =>
             {
                 _playerControl.UpdatePlayerInfo(character);
+                _groupControl.UpdateGroupInfo(character);
             }));
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Debug.WriteLine($"{ex.Message}: {ex.StackTrace}");
         }
     }
@@ -80,5 +101,16 @@ public partial class MainForm : Form, IMainView
     {
         MessageBox.Show(message);
     }
+    public void UpdateCharacterDropdown(List<string> characterNames)
+    {
+        if (InvokeRequired)
+        {
+            Invoke(new Action<List<string>>(UpdateCharacterDropdown), characterNames);
+            return;
+        }
+        characterDropdown.DataSource = null;
+        characterDropdown.DataSource = characterNames;
+    }
+
 }
 

@@ -14,7 +14,9 @@ namespace ZealPipes.ClientWinforms.UI.SharedComponents
     {
         private Color _gaugeColor;
         private string _caption = "F1";
-        private int _value;
+        private int _primaryValue;
+        private int _secondaryValue;
+
         public string Caption
         {
             get => _caption;
@@ -25,13 +27,25 @@ namespace ZealPipes.ClientWinforms.UI.SharedComponents
             }
         }
 
-        public int Value
+        public int PrimaryValue
         {
-            get => _value;
+            get => _primaryValue;
             set
             {
-                _value = value;
-                progressBar1.Value = value;
+                _primaryValue = value;
+                zealProgressBar1.Value = value;
+                label2.Text = $"{value}%";
+
+            }
+        }
+
+        public int SecondaryValue
+        {
+            get => _secondaryValue;
+            set
+            {
+                _secondaryValue = value;
+                zealProgressBar1.SecondaryValue = value;
                 label2.Text = $"{value}%";
 
             }
@@ -73,9 +87,9 @@ namespace ZealPipes.ClientWinforms.UI.SharedComponents
                 e.Graphics.FillRectangle(new SolidBrush(GaugeColor), ClientRectangle);
 
                 // Set the ForeColor of progressBar1 to the GaugeColor
-                if (progressBar1 != null)
+                if (zealProgressBar1 != null)
                 {
-                    progressBar1.ForeColor = GaugeColor;
+                    zealProgressBar1.ForeColor = GaugeColor;
                     //progressBar1.Value = Value;
                     //label2.Text = $"{Value}%";
                 }

@@ -5,9 +5,11 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.ClientApp", "ZealPipes.ClientApp\ZealPipes.ClientApp.csproj", "{4B968024-037E-4637-83B8-11D615BCC090}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.Services", "ZealPipes.Services\ZealPipes.Services.csproj", "{4F7FEAE1-195D-47A2-9FA3-004F8FBD0C57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZealPipes.Services", "ZealPipes.Services\ZealPipes.Services.csproj", "{4F7FEAE1-195D-47A2-9FA3-004F8FBD0C57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.Common", "ZealPipes.Common\ZealPipes.Common.csproj", "{EF0F2836-7364-4743-98F6-558F9DCC4147}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZealPipes.Common", "ZealPipes.Common\ZealPipes.Common.csproj", "{EF0F2836-7364-4743-98F6-558F9DCC4147}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.ServerTickClient", "ZealPipes.ServerTickClient\ZealPipes.ServerTickClient.csproj", "{A7CB2B97-921F-43BA-95DD-EA335D4BBE56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{EF0F2836-7364-4743-98F6-558F9DCC4147}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF0F2836-7364-4743-98F6-558F9DCC4147}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF0F2836-7364-4743-98F6-558F9DCC4147}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7CB2B97-921F-43BA-95DD-EA335D4BBE56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7CB2B97-921F-43BA-95DD-EA335D4BBE56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7CB2B97-921F-43BA-95DD-EA335D4BBE56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7CB2B97-921F-43BA-95DD-EA335D4BBE56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

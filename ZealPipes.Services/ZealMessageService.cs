@@ -25,7 +25,7 @@ namespace ZealPipes.Services
         public event EventHandler<ZealCharacter.ZealCharacterUpdatedEventArgs> OnCharacterUpdated;
         public event EventHandler<PipeCmdMessageReceivedEventArgs> OnPipeCmdMessageReceived;
 
-        public ZealMessageService(IConfiguration configuration, ProcessMonitor processMonitor, ZealPipeReader zealPipeReader)
+        public ZealMessageService(ProcessMonitor processMonitor, ZealPipeReader zealPipeReader)
         {
             _processMonitor = processMonitor;
             _zealPipeReader = zealPipeReader;

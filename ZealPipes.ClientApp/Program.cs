@@ -18,7 +18,6 @@ namespace ZealPipes.ClientApp
             // Build configuration
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<Program>() // Add this line to include user secrets
                 .Build();
 
             IServiceCollection services = new ServiceCollection();

@@ -6,6 +6,7 @@ using ZealPipes.Common.Models;
 using ZealPipes.Services;
 using ZealPipes.Services.Helpers;
 using ZealPipes.Common;
+using System.Linq;
 namespace ZealPipes.ClientApp
 {
     partial class Program
@@ -17,20 +18,20 @@ namespace ZealPipes.ClientApp
             // Build configuration
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets<Program>() // Add this line to include user secrets
                 .Build();
+
             IServiceCollection services = new ServiceCollection();
 
             #region What all programs should use
             // Add ZealSettings, ProcessMonitor, ZealPipeReader, ZealMessageService to DI
             services.AddSingleton(config);
             services.AddSingleton<ZealSettings>();                                  // Use to get Zeal settings from appsettings.json (otherwise comment & use next line)
-            //services.AddSingleton(new ZealSettings("eqgame", "zeal", 32768));     // pass settings w/o appsettings.json here
+                                                                                    //services.AddSingleton(new ZealSettings("eqgame", "zeal", 32768));     // pass settings w/o appsettings.json here
             services.AddSingleton<ProcessMonitor>();
             services.AddSingleton<ZealPipeReader>();
             services.AddSingleton<ZealMessageService>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-
 
             // Process messages
             var zealMessageService = serviceProvider.GetService<ZealMessageService>();
@@ -66,7 +67,7 @@ namespace ZealPipes.ClientApp
             finally
             {
                 zealMessageService.StopProcessing();
-            }   
+            }
         }
 
         #region Client Specific
@@ -164,7 +165,7 @@ namespace ZealPipes.ClientApp
 
         private static void ZealMessageService_OnPipeCmdMessageReceived(object sender, ZealMessageService.PipeCmdMessageReceivedEventArgs e)
         {
-            if(_lastMenuOption == ConsoleKey.D7)
+            if (_lastMenuOption == ConsoleKey.D7)
             {
                 Console.WriteLine($"ZealService(PipeCmd)> {e.Message.Data.Text}");
             }
@@ -179,6 +180,7 @@ namespace ZealPipes.ClientApp
                 Console.WriteLine($"Character.Detail.PlayerData serialized: {JsonSerializer.Serialize(e.Character.Detail.PlayerData)}");
                 Console.WriteLine($"Character.Detail.GaugeData serialized: {JsonSerializer.Serialize(e.Character.Detail.GaugeData)}");
                 Console.WriteLine($"Character.Detail.LabelData serialized: {JsonSerializer.Serialize(e.Character.Detail.LabelData)}");
+                Console.WriteLine($"Character.Detail.RaidData serialized: {JsonSerializer.Serialize(e.Character.Detail.RaidData?.ToList())}");
             }
         }
 
@@ -239,7 +241,6 @@ namespace ZealPipes.ClientApp
             }
             Console.WriteLine("");
         }
-
 
         #endregion
     }

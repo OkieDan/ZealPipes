@@ -105,6 +105,7 @@ namespace ZealPipes.Services
                     //{
                     //    character.UpdateCharacterData(raid);
                     //}
+                    character.UpdateCharacterData(raidMessage.Data);
                     OnRaidMessageReceived?.Invoke(this, new RaidMessageReceivedEventArgs(processId, raidMessage));
                     break;
 

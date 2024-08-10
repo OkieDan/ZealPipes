@@ -6,7 +6,8 @@
         Label,
         Gauge,
         Player,
-        PipeCmd
+        PipeCmd, // custom in zeal
+        Raid
     }
     public enum GaugeType
     {

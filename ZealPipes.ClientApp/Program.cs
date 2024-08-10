@@ -52,12 +52,21 @@ namespace ZealPipes.ClientApp
 
             #endregion
 
-            #region Client Specific
-            Console.Clear();
-            while (ShowMenu(zealMessageService));
-            #endregion
-
-            zealMessageService.StopProcessing();
+            try
+            {
+                #region Client Specific
+                Console.Clear();
+                while (ShowMenu(zealMessageService));
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                zealMessageService.StopProcessing();
+            }   
         }
 
         #region Client Specific
@@ -70,6 +79,7 @@ namespace ZealPipes.ClientApp
             zealMessageService.OnPlayerMessageReceived -= ZealMessageService_OnPlayerMessageReceived;
             zealMessageService.OnCharacterUpdated -= ZealMessageService_OnCharacterUpdated;
             zealMessageService.OnPipeCmdMessageReceived -= ZealMessageService_OnPipeCmdMessageReceived;
+            zealMessageService.OnRaidMessageReceived -= ZealMessageService_OnRaidMessageReceived;
         }
 
         private static void MenuHeader()
@@ -82,6 +92,7 @@ namespace ZealPipes.ClientApp
             Console.Write($"{(_lastMenuOption == ConsoleKey.D5 ? "  >" : "  ")}5:UI");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D6 ? "  >" : "  ")}6:Chat Log");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D7 ? "  >" : "  ")}7:/Pipe");
+            Console.Write($"{(_lastMenuOption == ConsoleKey.D7 ? "  >" : "  ")}8:Raid");
             Console.Write("   X:Exit\n");
         }
         private static bool ShowMenu(ZealMessageService zealMessageService)
@@ -139,6 +150,13 @@ namespace ZealPipes.ClientApp
                 UseZealConsoleUi = false;
                 ClearHandlers(zealMessageService);
                 zealMessageService.OnPipeCmdMessageReceived += ZealMessageService_OnPipeCmdMessageReceived;
+            }
+            if (key == ConsoleKey.D8 || key == ConsoleKey.NumPad8)
+            {
+                _lastMenuOption = ConsoleKey.D8;
+                UseZealConsoleUi = false;
+                ClearHandlers(zealMessageService);
+                zealMessageService.OnRaidMessageReceived += ZealMessageService_OnRaidMessageReceived;
             }
 
             return true;
@@ -213,6 +231,16 @@ namespace ZealPipes.ClientApp
                 Console.WriteLine($"ZealService(Log)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  text:{e.Message.Data.Text}");
             }
         }
+        private static void ZealMessageService_OnRaidMessageReceived(object sender, ZealMessageService.RaidMessageReceivedEventArgs e)
+        {
+            foreach (var data in e.Message.Data)
+            {
+                Console.WriteLine($"ZealService(Raid)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  Grp:{data.Group}  Name:{data.Name} Lvl:{data.Level} Rank:{data.Rank}");
+            }
+            Console.WriteLine("");
+        }
+
+
         #endregion
     }
 }

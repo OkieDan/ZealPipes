@@ -28,6 +28,7 @@ namespace ZealPipes.Services.Helpers
         private bool _processMessages;
         private HashSet<int> _connectedProcesses = new HashSet<int>();
         internal event EventHandler<PipeMessageReceivedEventArgs> OnPipeMessageReceived;
+        internal event EventHandler<ZealMessageService.ConnectionTerminatedEventArgs> OnConnectionTerminated;
 
         public ZealPipeReader(ZealSettings zealSettings)
         {
@@ -93,6 +94,7 @@ namespace ZealPipes.Services.Helpers
                             // Pipe is disconnected, remove the disconnected process from the active connections list
                             Console.WriteLine($"Process {processId} disconnected.");
                             _connectedProcesses.Remove(processId);
+                            OnConnectionTerminated?.Invoke(this, new ZealMessageService.ConnectionTerminatedEventArgs(processId));
                             break;
                         }
                     }
@@ -103,6 +105,7 @@ namespace ZealPipes.Services.Helpers
                 // Handle disconnection: Remove the disconnected process from the active connections list
                 Console.WriteLine($"Process {processId} disconnected.");
                 _connectedProcesses.Remove(processId);
+                OnConnectionTerminated?.Invoke(this, new ZealMessageService.ConnectionTerminatedEventArgs(processId));
             }
             catch (Exception ex)
             {

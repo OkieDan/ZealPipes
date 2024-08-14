@@ -24,6 +24,7 @@ namespace ZealPipes.Services
         public event EventHandler<PlayerMessageReceivedEventArgs> OnPlayerMessageReceived;
         public event EventHandler<ZealCharacter.ZealCharacterUpdatedEventArgs> OnCharacterUpdated;
         public event EventHandler<PipeCmdMessageReceivedEventArgs> OnPipeCmdMessageReceived;
+        public event EventHandler<ConnectionTerminatedEventArgs> OnConnectionTerminated;
 
         public ZealMessageService(ProcessMonitor processMonitor, ZealPipeReader zealPipeReader)
         {
@@ -31,7 +32,13 @@ namespace ZealPipes.Services
             _zealPipeReader = zealPipeReader;
             _processMonitor.OnNewProcessFound += ProcessMonitor_OnNewProcessFound;
             _zealPipeReader.OnPipeMessageReceived += ZealPipeReader_OnPipeMessageReceived;
+            _zealPipeReader.OnConnectionTerminated += ZealPipeReader_OnConnectionTerminated;
             StartProcessing();
+        }
+
+        private void ZealPipeReader_OnConnectionTerminated(object sender, ConnectionTerminatedEventArgs e)
+        {
+            OnConnectionTerminated?.Invoke(this, e);
         }
 
         private void ProcessMonitor_OnNewProcessFound(object sender, ProcessMonitor.NewProcessFoundEvent e)

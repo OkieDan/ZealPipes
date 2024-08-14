@@ -24,6 +24,7 @@ namespace ZealPipes.Services
         public event EventHandler<PlayerMessageReceivedEventArgs> OnPlayerMessageReceived;
         public event EventHandler<ZealCharacter.ZealCharacterUpdatedEventArgs> OnCharacterUpdated;
         public event EventHandler<PipeCmdMessageReceivedEventArgs> OnPipeCmdMessageReceived;
+        public event EventHandler<RaidMessageReceivedEventArgs> OnRaidMessageReceived;
 
         public ZealMessageService(IConfiguration configuration, ProcessMonitor processMonitor, ZealPipeReader zealPipeReader)
         {
@@ -96,6 +97,19 @@ namespace ZealPipes.Services
                     var playerMessage = new PlayerMessage(characterName, data);
                     character.UpdateCharacterData(playerMessage.Data);
                     OnPlayerMessageReceived?.Invoke(this, new PlayerMessageReceivedEventArgs(processId, playerMessage));
+                    break;
+
+                case PipeMessageType.Raid:
+                    var raidMessage = new RaidMessage(characterName, data);
+                    //foreach (var raid in raidMessage.Data)
+                    //{
+                    //    character.UpdateCharacterData(raid);
+                    //}
+                    character.UpdateCharacterData(raidMessage.Data);
+                    OnRaidMessageReceived?.Invoke(this, new RaidMessageReceivedEventArgs(processId, raidMessage));
+                    break;
+
+                default:
                     break;
             }
         }

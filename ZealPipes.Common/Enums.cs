@@ -114,6 +114,8 @@
         ExpPH = 81,
         TargetPetOwner = 82,
         // Duplicate Mana (124) and MaxMana (125) entries removed
+        Mana = 124,
+        MaxMana = 125,
         CastingName = 134
     }
     public enum LogType : int
@@ -211,4 +213,30 @@
         ItemTags = 326,
         RaidSay = 327
     }
+    public enum RaidRank
+    {
+        RaidMember = 0,
+        GroupLeader = 1,
+        RaidLeader = 2
+    }
+    public enum ClassTypes
+    {
+        Warrior = 1,
+        Cleric = 2,
+        Paladin = 3,
+        Ranger = 4,
+        Shadowknight = 5,
+        Druid = 6,
+        Monk = 7,
+        Bard = 8,
+        Rogue = 9,
+        Shaman = 10,
+        Necromancer = 11,
+        Wizard = 12,
+        Magician = 13,
+        Enchanter = 14,
+        Beastlord = 15,
+        Banker = 16,
+        Merchant = 32
+    };
 }

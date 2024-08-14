@@ -26,7 +26,7 @@ namespace ZealPipes.ClientApp
             // Add ZealSettings, ProcessMonitor, ZealPipeReader, ZealMessageService to DI
             services.AddSingleton(config);
             services.AddSingleton<ZealSettings>();                                  // Use to get Zeal settings from appsettings.json (otherwise comment & use next line)
-                                                                                    //services.AddSingleton(new ZealSettings("eqgame", "zeal", 32768));     // pass settings w/o appsettings.json here
+            //services.AddSingleton(new ZealSettings("eqgame", "zeal", 32768));     // pass settings w/o appsettings.json here
             services.AddSingleton<ProcessMonitor>();
             services.AddSingleton<ZealPipeReader>();
             services.AddSingleton<ZealMessageService>();

@@ -25,7 +25,6 @@ namespace ZealPipes.Services.Helpers
         }
         private readonly ZealSettings _zealSettings;
         private bool _keepReading;
-        private bool _processMessages;
         private HashSet<int> _connectedProcesses = new HashSet<int>();
         internal event EventHandler<PipeMessageReceivedEventArgs> OnPipeMessageReceived;
 

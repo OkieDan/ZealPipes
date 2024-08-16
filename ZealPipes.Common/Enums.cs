@@ -112,7 +112,8 @@
         // ...
         ExpPH = 81,
         TargetPetOwner = 82,
-        // Duplicate Mana (124) and MaxMana (125) entries removed
+        CurrentMana = 124,
+        MaxMana = 125,
         CastingName = 134
     }
     public enum LogType : int

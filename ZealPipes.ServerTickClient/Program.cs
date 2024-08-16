@@ -12,11 +12,9 @@ using System.Speech.Synthesis;
 #region What all programs should use
 
 #endregion
-#pragma warning disable CA1416;
+#pragma warning disable CA1416
 partial class Program
 {
-    private static bool _exit;
-
     static void Main(string[] args)
     {
         // Build configuration
@@ -36,7 +34,7 @@ partial class Program
         services.AddSingleton<ZealMessageService>();
         IServiceProvider serviceProvider = services.BuildServiceProvider();
         var zealMessageService = serviceProvider.GetService<ZealMessageService>();
-        zealMessageService.OnCharacterUpdated += ZealMessageService_OnCharacterUpdated;
+        zealMessageService!.OnCharacterUpdated += ZealMessageService_OnCharacterUpdated;
         zealMessageService.StartProcessing();
 
         Console.Clear();

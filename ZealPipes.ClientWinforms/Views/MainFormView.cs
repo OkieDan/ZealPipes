@@ -15,7 +15,7 @@ public partial class MainForm : Form, IMainView
     private Bitmap backgroundBuffer;
     private ComboBox characterDropdown;
     private GroupControl _groupControl;
-
+    // NOTE to self: Copying the video output of game to form background works but only when client window is renamed to character name.
     public MainForm(MainPresenter presenter)
     {
         InitializeComponent();

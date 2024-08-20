@@ -102,6 +102,14 @@
         Buff14 = 59,
         // Spell XML Names (skipped - not meaningful as labels)
         // ...
+        SpellSlot0 = 60,
+        SpellSlot1 = 61,
+        SpellSlot2 = 62,
+        SpellSlot3 = 63,
+        SpellSlot4 = 64,
+        SpellSlot5 = 65,
+        SpellSlot6 = 66,
+        SpellSlot7 = 67,
         PlayerPetName = 68,
         PlayerPetHPPerc = 69,
         PlayerCurrentHPMaxHP = 70,
@@ -111,6 +119,7 @@
         Title = 74,
         // Mana/MaxMana (duplicate of Mana/MaxMana at 80)
         // ...
+        ManaMaxMana = 80,
         ExpPH = 81,
         TargetPetOwner = 82,
         // Duplicate Mana (124) and MaxMana (125) entries removed

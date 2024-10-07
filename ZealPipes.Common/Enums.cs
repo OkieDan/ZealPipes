@@ -7,7 +7,8 @@
         Gauge,
         Player,
         PipeCmd, // custom in zeal
-        Raid
+        Raid,
+        Group
     }
     public enum GaugeType
     {
@@ -122,7 +123,6 @@
         ManaMaxMana = 80,
         ExpPH = 81,
         TargetPetOwner = 82,
-        // Duplicate Mana (124) and MaxMana (125) entries removed
         Mana = 124,
         MaxMana = 125,
         CastingName = 134

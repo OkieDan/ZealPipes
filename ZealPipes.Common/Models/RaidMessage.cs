@@ -22,6 +22,12 @@ namespace ZealPipes.Common.Models
 
             [JsonPropertyName("rank")]
             public string Rank { get; set; }
+
+            [JsonPropertyName("loc")]
+            public Vec3 Position { get; set; }
+
+            [JsonPropertyName("heading")]
+            public float Heading { get; set; }
         }
 
         public RaidMessage(string character, string pipeMessageData)

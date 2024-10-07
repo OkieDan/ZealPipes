@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>ZealPipes.Services</PackageId>
-		<Version>0.0.1</Version>
+		<Version>0.0.2</Version>
 		<Authors>OkieDan</Authors>
 		<Description>Service to read data from Zeal over named pipes.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>

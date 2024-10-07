@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>ZealPipes.Common</PackageId>
-		<Version>0.0.1</Version>
+		<Version>0.0.2</Version>
 		<Authors>OkieDan</Authors>
 		<Description>Some common types shared between ZealPipes.Services and your application.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>

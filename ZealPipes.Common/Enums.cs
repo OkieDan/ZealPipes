@@ -7,7 +7,8 @@
         Gauge,
         Player,
         PipeCmd, // custom in zeal
-        Raid
+        Raid,
+        Group
     }
     public enum GaugeType
     {

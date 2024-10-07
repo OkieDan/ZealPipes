@@ -26,6 +26,7 @@ namespace ZealPipes.Services
         public event EventHandler<PipeCmdMessageReceivedEventArgs> OnPipeCmdMessageReceived;
         public event EventHandler<ConnectionTerminatedEventArgs> OnConnectionTerminated;
         public event EventHandler<RaidMessageReceivedEventArgs> OnRaidMessageReceived;
+        public event EventHandler<GroupMessageReceivedEventArgs> OnGroupMessageReceived;
 
         public ZealMessageService(ProcessMonitor processMonitor, ZealPipeReader zealPipeReader)
         {
@@ -114,6 +115,12 @@ namespace ZealPipes.Services
                     //}
                     character.UpdateCharacterData(raidMessage.Data);
                     OnRaidMessageReceived?.Invoke(this, new RaidMessageReceivedEventArgs(processId, raidMessage));
+                    break;
+                case PipeMessageType.Group:
+                    OnGroupMessageReceived?.Invoke(this, new GroupMessageReceivedEventArgs(
+                            e.ProcessId,
+                            new GroupMessage(e.Message.Character, e.Message.Data)
+                        ));
                     break;
 
                 default:

@@ -243,7 +243,7 @@ namespace ZealPipes.ClientApp
             {
                 foreach (var data in e.Message.Data)
                 {
-                    Console.WriteLine($"ZealService(Label)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  labelType:{data.Type}  value:{data.Value}");
+                    Console.WriteLine($"ZealService(Label)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  labelType:{data.Type}  value:{data.Value}  meta:{JsonSerializer.Serialize(data.Meta)}");
                 }
             }
         }

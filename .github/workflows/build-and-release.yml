@@ -42,12 +42,6 @@ jobs:
     - name: Publish ChainMayhem (.NET 8)
       run: dotnet publish ChainMayhem\ChainMayhem.csproj -c Release -o publish\ChainMayhem --no-build
 
-    - name: Publish .NET Framework apps using MSBuild
-      run: |
-        msbuild ZealPipes.ClientApp\ZealPipes.ClientApp.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\publish\ZealPipes.ClientApp\ /p:OutDir=..\publish\ZealPipes.ClientApp\ /t:_CopyAllFilesToSingleFolderForPackage
-        msbuild ZealPipes.ServerTickClient\ZealPipes.ServerTickClient.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\publish\ZealPipes.ServerTickClient\ /p:OutDir=..\publish\ZealPipes.ServerTickClient\ /t:_CopyAllFilesToSingleFolderForPackage
-      shell: pwsh
-
     - name: Copy .NET Framework build outputs
       run: |
         New-Item -ItemType Directory -Force -Path "publish\ZealPipes.ClientApp"

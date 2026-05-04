@@ -25,6 +25,8 @@ namespace ZealPipes.Common.Models
             public Vec3 Position { get; set; }
             [JsonPropertyName("heading")]
             public float heading { get; set; }
+            [JsonPropertyName("autoattack")]
+            public bool AutoAttack { get; set; }
         }
 
         [JsonPropertyName("zone")]

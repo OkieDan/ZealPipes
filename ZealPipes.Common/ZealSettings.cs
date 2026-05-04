@@ -4,6 +4,13 @@ namespace ZealPipes.Common
 {
     public class ZealSettings
     {
+        public ZealSettings()
+        {
+            PipePrefix = "zeal";
+            BufferSize = 32768;
+            EqProcessName = "eqgame";
+        }
+
         public ZealSettings(string eqProcessName, string pipePrefix = "zeal", int bufferSize = 32768)
         {
             PipePrefix = pipePrefix;

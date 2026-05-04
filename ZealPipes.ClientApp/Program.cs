@@ -92,7 +92,8 @@ namespace ZealPipes.ClientApp
             Console.Write($"{(_lastMenuOption == ConsoleKey.D5 ? "  >" : "  ")}5:UI");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D6 ? "  >" : "  ")}6:Chat Log");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D7 ? "  >" : "  ")}7:/Pipe");
-            Console.Write($"{(_lastMenuOption == ConsoleKey.D7 ? "  >" : "  ")}8:Raid");
+            Console.Write($"{(_lastMenuOption == ConsoleKey.D8 ? "  >" : "  ")}8:Raid");
+            Console.Write($"{(_lastMenuOption == ConsoleKey.D9 ? "  >" : "  ")}9:Group");
             Console.Write("   X:Exit\n");
         }
         private static bool ShowMenu(ZealMessageService zealMessageService)
@@ -158,8 +159,30 @@ namespace ZealPipes.ClientApp
                 ClearHandlers(zealMessageService);
                 zealMessageService.OnRaidMessageReceived += ZealMessageService_OnRaidMessageReceived;
             }
+            if (key == ConsoleKey.D9 || key == ConsoleKey.NumPad9)
+            {
+                _lastMenuOption = ConsoleKey.D9;
+                UseZealConsoleUi = false;
+                ClearHandlers(zealMessageService);
+                zealMessageService.OnGroupMessageReceived += ZealMessageService_OnGroupMessageRecieved;
+            }
 
             return true;
+        }
+
+        private static void ZealMessageService_OnGroupMessageRecieved(object sender, ZealMessageService.GroupMessageReceivedEventArgs e)
+        {
+            if (_lastMenuOption == ConsoleKey.D9)
+            {
+                foreach (var data in e.Message.Data)
+                {
+                    Console.WriteLine($"GroupMember.Name >      {data.Name}");
+                    Console.WriteLine($"GroupMember.Heading >   {data.Heading}");
+                    Console.WriteLine($"GroupMember.Pos X >     {data.Position.X}");
+                    Console.WriteLine($"GroupMember.Pos Y >     {data.Position.Y}");
+                    Console.WriteLine($"GroupMember.Pos Z >     {data.Position.Z}");
+                }
+            }
         }
 
         private static void ZealMessageService_OnPipeCmdMessageReceived(object sender, ZealMessageService.PipeCmdMessageReceivedEventArgs e)
@@ -236,7 +259,7 @@ namespace ZealPipes.ClientApp
         {
             foreach (var data in e.Message.Data)
             {
-                Console.WriteLine($"ZealService(Raid)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  Grp:{data.Group}  Name:{data.Name} Lvl:{data.Level} Rank:{data.Rank}");
+                Console.WriteLine($"ZealService(Raid)> proc:{e.ProcessId}  char:{e.Message.Character}  type:{e.Message.Type}  Grp:{data.Group}  Name:{data.Name} Lvl:{data.Level} Rank:{data.Rank} Loc_X: {data.Position.X} Loc_Y: {data.Position.Y} Loc_Z: {data.Position.Z} Heading: {data.Heading}");
             }
             Console.WriteLine("");
         }

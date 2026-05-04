@@ -39,14 +39,20 @@ jobs:
     - name: Build solution
       run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=Release /p:Platform="Any CPU" /m
 
+    - name: Publish ChainMayhem (.NET 8)
+      run: dotnet publish ChainMayhem\ChainMayhem.csproj -c Release -o publish\ChainMayhem --no-build
+
+    - name: Publish ZealPipes.ClientApp (.NET Framework 4.8)
+      run: dotnet publish ZealPipes.ClientApp\ZealPipes.ClientApp.csproj -c Release -o publish\ZealPipes.ClientApp --no-build
+
+    - name: Publish ZealPipes.ServerTickClient (.NET Framework 4.8)
+      run: dotnet publish ZealPipes.ServerTickClient\ZealPipes.ServerTickClient.csproj -c Release -o publish\ZealPipes.ServerTickClient --no-build
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
-        path: |
-          **/bin/Release/**/*.exe
-          **/bin/Release/**/*.dll
-          **/bin/Release/**/*.pdb
+        path: publish/**
         retention-days: 5
 
   release:

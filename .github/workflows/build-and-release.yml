@@ -36,17 +36,14 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore ${{ env.SOLUTION_FILE }}
 
-    - name: Build solution
-      run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=Release /p:Platform="Any CPU" /m
-
     - name: Publish ChainMayhem (.NET 8)
-      run: dotnet publish ChainMayhem\ChainMayhem.csproj -c Release -o publish\ChainMayhem --no-build
+      run: dotnet publish ChainMayhem\ChainMayhem.csproj -c Release -o publish\ChainMayhem
 
     - name: Publish ZealPipes.ClientApp (.NET Framework 4.8)
-      run: dotnet publish ZealPipes.ClientApp\ZealPipes.ClientApp.csproj -c Release -o publish\ZealPipes.ClientApp --no-build
+      run: dotnet publish ZealPipes.ClientApp\ZealPipes.ClientApp.csproj -c Release -o publish\ZealPipes.ClientApp
 
     - name: Publish ZealPipes.ServerTickClient (.NET Framework 4.8)
-      run: dotnet publish ZealPipes.ServerTickClient\ZealPipes.ServerTickClient.csproj -c Release -o publish\ZealPipes.ServerTickClient --no-build
+      run: dotnet publish ZealPipes.ServerTickClient\ZealPipes.ServerTickClient.csproj -c Release -o publish\ZealPipes.ServerTickClient
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

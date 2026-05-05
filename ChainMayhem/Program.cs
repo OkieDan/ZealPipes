@@ -20,6 +20,7 @@ partial class Program
     private static int speechRate = 8;
     private static readonly object syncLock = new();
     private static Group? previousGroup;
+    private static HashSet<string> ignoredPlayers = new(StringComparer.OrdinalIgnoreCase);
 
     static void Main(string[] args)
     {
@@ -80,10 +81,15 @@ partial class Program
             for (int i = 0; i < characterNames.Count; i++)
             {
                 Console.WriteLine($"{i + 1}: {characterNames[i]}{(characterNames[i] == selectedCharacterName ? " *" : "")}");
-            }
-            Console.WriteLine($"\nSpeech Speed: {speechRate} (-10 to 10)");
-            Console.WriteLine("+: Increase Speed  -: Decrease Speed");
-            Console.WriteLine("X: Exit");
+                }
+                Console.WriteLine($"\nSpeech Speed: {speechRate} (-10 to 10)");
+                Console.WriteLine("+: Increase Speed  -: Decrease Speed");
+                Console.WriteLine("I: Ignore Player (pet messages)");
+                if (ignoredPlayers.Count > 0)
+                {
+                    Console.WriteLine($"   Ignored: {string.Join(", ", ignoredPlayers)}");
+                }
+                Console.WriteLine("X: Exit");
         }
     }
 
@@ -126,6 +132,10 @@ partial class Program
                 speechRate--;
                 synth.Rate = speechRate;
             }
+        }
+        else if (key == ConsoleKey.I)
+        {
+            AddIgnoredPlayer();
         }
         return true;
     }
@@ -174,6 +184,9 @@ partial class Program
             var previousMember = previousGroup.Members.FirstOrDefault(m => m.Name == currentMember.Name);
             if (previousMember == null) continue;
 
+            if (ignoredPlayers.Contains(currentMember.Name))
+                continue;
+
             if (currentMember.PetHp == 0 && previousMember.PetHp > 10)
             {
                 synth.SpeakAsync($"Charm Break {currentMember.Name}");
@@ -181,6 +194,37 @@ partial class Program
             else if (currentMember.PetHp.Between(1, 19) && previousMember.PetHp > 19)
             {
                 synth.SpeakAsync("Heal Pet");
+            }
+        }
+    }
+
+    private static void AddIgnoredPlayer()
+    {
+        lock (syncLock)
+        {
+            Console.Clear();
+            Console.WriteLine("=== Ignore Player (pet messages) ===");
+            Console.WriteLine();
+            if (ignoredPlayers.Count > 0)
+            {
+                Console.WriteLine($"Currently ignored: {string.Join(", ", ignoredPlayers)}");
+                Console.WriteLine();
+            }
+            Console.Write("Enter player name: ");
+            var playerName = Console.ReadLine()?.Trim();
+
+            if (!string.IsNullOrEmpty(playerName))
+            {
+                if (ignoredPlayers.Add(playerName))
+                {
+                    Console.WriteLine($"Added '{playerName}' to ignored players.");
+                }
+                else
+                {
+                    Console.WriteLine($"'{playerName}' is already in the ignored list.");
+                }
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey(true);
             }
         }
     }

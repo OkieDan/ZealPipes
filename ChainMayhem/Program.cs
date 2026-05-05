@@ -17,6 +17,7 @@ partial class Program
     private static string? selectedCharacterName = null;
     private static int previousCharacterCount = 0;
     private static SpeechSynthesizer synth = null!;
+    private static int speechRate = 8;
     private static readonly object syncLock = new();
     private static Group? previousGroup;
 
@@ -45,7 +46,7 @@ partial class Program
 
         var zealMessageService = serviceProvider.GetService<ZealMessageService>();
 
-        synth = new SpeechSynthesizer { Rate = 8 };
+        synth = new SpeechSynthesizer { Rate = speechRate };
         synth.SelectVoice("Microsoft Zira Desktop");
 
         zealMessageService!.OnCharacterUpdated += ZealMessageService_OnCharacterUpdated;
@@ -80,7 +81,9 @@ partial class Program
             {
                 Console.WriteLine($"{i + 1}: {characterNames[i]}{(characterNames[i] == selectedCharacterName ? " *" : "")}");
             }
-            Console.WriteLine("\nX: Exit");
+            Console.WriteLine($"\nSpeech Speed: {speechRate} (-10 to 10)");
+            Console.WriteLine("+: Increase Speed  -: Decrease Speed");
+            Console.WriteLine("X: Exit");
         }
     }
 
@@ -106,6 +109,22 @@ partial class Program
             if (index < characterNames.Count)
             {
                 selectedCharacterName = characterNames[index];
+            }
+        }
+        else if (key == ConsoleKey.Add || key == ConsoleKey.OemPlus)
+        {
+            if (speechRate < 10)
+            {
+                speechRate++;
+                synth.Rate = speechRate;
+            }
+        }
+        else if (key == ConsoleKey.Subtract || key == ConsoleKey.OemMinus)
+        {
+            if (speechRate > -10)
+            {
+                speechRate--;
+                synth.Rate = speechRate;
             }
         }
         return true;

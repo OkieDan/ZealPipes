@@ -13,6 +13,19 @@ public static class ZealCharacterExtensions
             Members = new List<GroupMember>()
         };
 
+        // Add the player's own pet
+        var playerPetHpString = character.Detail.LabelData.FirstOrDefault(ld => ld.Type == LabelType.PlayerPetHPPerc)?.Value;
+        if (!string.IsNullOrEmpty(playerPetHpString))
+        {
+            var playerPetHp = int.TryParse(playerPetHpString, out var parsedPlayerPetHp) ? parsedPlayerPetHp : 0;
+            group.Members.Add(new GroupMember
+            {
+                Name = character.Name,
+                PetHp = playerPetHp
+            });
+        }
+
+        // Add group members' pets
         for (int i = 0; i < 5; i++)
         {
             var nameLabelType = (LabelType)((int)LabelType.GroupMember1Name + i);

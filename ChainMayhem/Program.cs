@@ -6,6 +6,7 @@ using ZealPipes.Services.Helpers;
 using ZealPipes.Common;
 using ChainMayhem.Extensions;
 using ChainMayhem.Models;
+using ChainMayhem.Services;
 using System.Speech.Synthesis;
 using System.Collections.Concurrent;
 
@@ -21,6 +22,7 @@ partial class Program
     private static readonly object syncLock = new();
     private static Group? previousGroup;
     private static HashSet<string> ignoredPlayers = new(StringComparer.OrdinalIgnoreCase);
+    private static SettingsManager settingsManager = null!;
 
     static void Main(string[] args)
     {
@@ -42,10 +44,17 @@ partial class Program
         services.AddSingleton<ProcessMonitor>();
         services.AddSingleton<ZealPipeReader>();
         services.AddSingleton<ZealMessageService>();
+        services.AddSingleton<SettingsManager>();
 
         IServiceProvider serviceProvider = services.BuildServiceProvider();
 
         var zealMessageService = serviceProvider.GetService<ZealMessageService>();
+        settingsManager = serviceProvider.GetService<SettingsManager>()!;
+
+        // Load persisted settings
+        selectedCharacterName = settingsManager.Settings.SelectedCharacterName;
+        speechRate = settingsManager.Settings.SpeechRate;
+        ignoredPlayers = settingsManager.Settings.IgnoredPlayers;
 
         synth = new SpeechSynthesizer { Rate = speechRate };
         synth.SelectVoice("Microsoft Zira Desktop");
@@ -107,6 +116,7 @@ partial class Program
             if (index < characterNames.Count)
             {
                 selectedCharacterName = characterNames[index];
+                settingsManager.UpdateSelectedCharacter(selectedCharacterName);
             }
         }
         else if (key >= ConsoleKey.NumPad1 && key <= ConsoleKey.NumPad9)
@@ -115,6 +125,7 @@ partial class Program
             if (index < characterNames.Count)
             {
                 selectedCharacterName = characterNames[index];
+                settingsManager.UpdateSelectedCharacter(selectedCharacterName);
             }
         }
         else if (key == ConsoleKey.Add || key == ConsoleKey.OemPlus)
@@ -123,6 +134,7 @@ partial class Program
             {
                 speechRate++;
                 synth.Rate = speechRate;
+                settingsManager.UpdateSpeechRate(speechRate);
             }
         }
         else if (key == ConsoleKey.Subtract || key == ConsoleKey.OemMinus)
@@ -131,6 +143,7 @@ partial class Program
             {
                 speechRate--;
                 synth.Rate = speechRate;
+                settingsManager.UpdateSpeechRate(speechRate);
             }
         }
         else if (key == ConsoleKey.I)
@@ -220,6 +233,7 @@ partial class Program
 
                 if (ignoredPlayers.Add(playerName))
                 {
+                    settingsManager.AddIgnoredPlayer(playerName);
                     Console.WriteLine($"Added '{playerName}' to ignored players.");
                 }
                 else

@@ -17,7 +17,25 @@ public class SettingsManager
 
     public SettingsManager(string? settingsDirectory = null)
     {
-        var directory = settingsDirectory ?? AppDomain.CurrentDomain.BaseDirectory;
+        // Use LocalApplicationData for user-specific writable location
+        var directory = settingsDirectory ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ChainMayhem");
+
+        // Ensure directory exists
+        try
+        {
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Warning: Could not create settings directory: {ex.Message}");
+            Console.WriteLine("Settings will not be persisted.");
+        }
+
         _settingsFilePath = Path.Combine(directory, "user-settings.json");
         _settings = LoadSettings();
     }
@@ -34,6 +52,15 @@ public class SettingsManager
                 var settings = JsonSerializer.Deserialize<ChainMayhemSettings>(json, JsonOptions);
                 if (settings != null)
                 {
+                    var normalizedPlayers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var player in settings.IgnoredPlayers)
+                    {
+                        // Normalize to Title Case using invariant culture
+                        var normalized = NormalizePlayerName(player);
+                        normalizedPlayers.Add(normalized);
+                    }
+                    settings.IgnoredPlayers = normalizedPlayers;
+
                     return settings;
                 }
             }
@@ -75,15 +102,24 @@ public class SettingsManager
         SaveSettings();
     }
 
-    public void AddIgnoredPlayer(string playerName)
+    /// <summary>
+    /// Adds a player to the ignored list. Returns true if added, false if already exists.
+    /// </summary>
+    public bool AddIgnoredPlayer(string playerName)
     {
-        _settings.IgnoredPlayers.Add(playerName);
-        SaveSettings();
+        var normalized = NormalizePlayerName(playerName);
+        var added = _settings.IgnoredPlayers.Add(normalized);
+        if (added)
+        {
+            SaveSettings();
+        }
+        return added;
     }
 
     public void RemoveIgnoredPlayer(string playerName)
     {
-        _settings.IgnoredPlayers.Remove(playerName);
+        var normalized = NormalizePlayerName(playerName);
+        _settings.IgnoredPlayers.Remove(normalized);
         SaveSettings();
     }
 
@@ -91,5 +127,17 @@ public class SettingsManager
     {
         _settings = new ChainMayhemSettings();
         SaveSettings();
+    }
+
+    /// <summary>
+    /// Normalizes player names to Title Case using invariant culture.
+    /// Example: "BOBSMITH" or "bobsmith" -> "Bobsmith"
+    /// </summary>
+    private static string NormalizePlayerName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return name;
+
+        return char.ToUpperInvariant(name[0]) + name.Substring(1).ToLowerInvariant();
     }
 }

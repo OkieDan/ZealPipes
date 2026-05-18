@@ -228,12 +228,9 @@ partial class Program
 
             if (!string.IsNullOrEmpty(playerName))
             {
-                // Normalize to first letter uppercase, rest lowercase
-                playerName = char.ToUpper(playerName[0]) + playerName.Substring(1).ToLower();
-
-                if (ignoredPlayers.Add(playerName))
+                // Use SettingsManager to add (it handles normalization and persistence)
+                if (settingsManager.AddIgnoredPlayer(playerName))
                 {
-                    settingsManager.AddIgnoredPlayer(playerName);
                     Console.WriteLine($"Added '{playerName}' to ignored players.");
                 }
                 else

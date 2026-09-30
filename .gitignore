@@ -359,5 +359,11 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+# Share the VS Code build and debug configuration, but ignore other local files.
+/.vscode/*
+!/.vscode/launch.json
+!/.vscode/tasks.json
+!/.vscode/settings.json
+
 # Fody - auto-generated XML schema
 FodyWeavers.xsd

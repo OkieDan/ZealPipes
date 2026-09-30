@@ -34,7 +34,8 @@
         Group4PetHP = 20,
         Group5PetHP = 21,
         // Removed duplicate entry for ExpPerHR
-        ExpPerHR = 23
+        ExpPerHR = 23,
+        TickEtaMs = 24
     }
     public enum LabelType
     {
@@ -125,7 +126,13 @@
         TargetPetOwner = 82,
         Mana = 124,
         MaxMana = 125,
-        CastingName = 134
+        CastingName = 134,
+        Song0 = 135,
+        Song1 = 136,
+        Song2 = 137,
+        Song3 = 138,
+        Song4 = 139,
+        Song5 = 140
     }
     public enum LogType : int
     {

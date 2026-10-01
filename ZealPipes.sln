@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.ServerTickClient"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChainMayhem", "ChainMayhem\ChainMayhem.csproj", "{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZealPipes.Common.Tests", "ZealPipes.Common.Tests\ZealPipes.Common.Tests.csproj", "{9C042675-D722-40D4-A97D-7E7D4FAE9A43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

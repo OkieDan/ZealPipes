@@ -35,7 +35,16 @@
         Group5PetHP = 21,
         // Removed duplicate entry for ExpPerHR
         ExpPerHR = 23,
-        TickEtaMs = 24
+        TickEtaMs = 24,
+        SpellCooldown = 25,
+        Spell0Recast = 26,
+        Spell1Recast = 27,
+        Spell2Recast = 28,
+        Spell3Recast = 29,
+        Spell4Recast = 30,
+        Spell5Recast = 31,
+        Spell6Recast = 32,
+        Spell7Recast = 33
     }
     public enum LabelType
     {
@@ -136,6 +145,7 @@
     }
     public enum LogType : int
     {
+        Default = 0, // Also used by the "Tick" log event.
         unk1 = 1,
         GreenCon = 2,
         unk3 = 3,
@@ -227,7 +237,9 @@
         ChatChannel10Echo = 324,
         ZealBlueCon = 325,
         ItemTags = 326,
-        RaidSay = 327
+        RaidSay = 327,
+        OtherMeleeCrits = 1008,
+        OtherDamageShield = 1009
     }
     public enum RaidRank
     {

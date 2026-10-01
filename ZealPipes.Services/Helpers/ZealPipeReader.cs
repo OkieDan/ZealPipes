@@ -23,10 +23,22 @@ namespace ZealPipes.Services.Helpers
                 ProcessId = processId;
             }
         }
+        internal class RawDataReceivedEventArgs : EventArgs
+        {
+            internal string Data { get; private set; }
+            internal int ProcessId { get; private set; }
+
+            internal RawDataReceivedEventArgs(int processId, string data)
+            {
+                Data = data;
+                ProcessId = processId;
+            }
+        }
         private readonly ZealSettings _zealSettings;
         private bool _keepReading;
         private HashSet<int> _connectedProcesses = new HashSet<int>();
         internal event EventHandler<PipeMessageReceivedEventArgs> OnPipeMessageReceived;
+        internal event EventHandler<RawDataReceivedEventArgs> OnRawDataReceived;
         internal event EventHandler<ZealMessageService.ConnectionTerminatedEventArgs> OnConnectionTerminated;
 
         public ZealPipeReader(ZealSettings zealSettings)
@@ -65,6 +77,7 @@ namespace ZealPipes.Services.Helpers
                             if (bytesRead > 0)
                             {
                                 string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                                OnRawDataReceived?.Invoke(this, new RawDataReceivedEventArgs(processId, message));
                                 
                                 foreach (string json in splitter.SplitJson(message))
                                 {

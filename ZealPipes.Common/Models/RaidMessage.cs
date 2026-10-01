@@ -12,38 +12,12 @@ namespace ZealPipes.Common.Models
             public string Class { get; set; }
 
             [JsonPropertyName("group")]
-            private string Group_Str { get; set; }
-            public int Group 
-            {
-                get 
-                {
-                    if (int.TryParse(Group_Str, out int group))
-                    {
-                        return group;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                } 
-            }
+            [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+            public int Group { get; set; }
 
             [JsonPropertyName("level")]
-            private string Level_Str { get; set; }
-            public int Level
-            {
-                get
-                {
-                    if (int.TryParse(Level_Str, out int level))
-                    {
-                        return level;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
-            }
+            [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+            public int Level { get; set; }
 
             [JsonPropertyName("name")]
             public string Name { get; set; }
@@ -56,6 +30,18 @@ namespace ZealPipes.Common.Models
 
             [JsonPropertyName("heading")]
             public float Heading { get; set; }
+
+            [JsonPropertyName("spawn_id")]
+            public int? SpawnId { get; set; }
+
+            [JsonPropertyName("hp_current")]
+            public int? HpCurrent { get; set; }
+
+            [JsonPropertyName("hp_max")]
+            public int? HpMax { get; set; }
+
+            [JsonPropertyName("zone_id")]
+            public int? ZoneId { get; set; }
         }
 
         public RaidMessage(string character, string pipeMessageData)

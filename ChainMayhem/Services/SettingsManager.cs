@@ -102,6 +102,12 @@ public class SettingsManager
         SaveSettings();
     }
 
+    public void UpdateCharmBreakClassFilter(bool enabled)
+    {
+        _settings.TrackCharmBreaksForCharmClassesOnly = enabled;
+        SaveSettings();
+    }
+
     /// <summary>
     /// Adds a player to the ignored list. Returns true if added, false if already exists.
     /// </summary>

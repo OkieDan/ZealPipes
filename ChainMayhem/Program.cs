@@ -15,6 +15,7 @@ namespace ChainMayhem;
 partial class Program
 {
     private static ConcurrentDictionary<string, DateTime> characterUpdates = new();
+    private static readonly ConcurrentDictionary<int, GroupMessage.GroupData[]> groupMembersByProcess = new();
     private static string? selectedCharacterName = null;
     private static int previousCharacterCount = 0;
     private static SpeechSynthesizer synth = null!;
@@ -60,6 +61,8 @@ partial class Program
         synth.SelectVoice("Microsoft Zira Desktop");
 
         zealMessageService!.OnCharacterUpdated += ZealMessageService_OnCharacterUpdated;
+        zealMessageService.OnGroupMessageReceived += (_, e) => groupMembersByProcess[e.ProcessId] = e.Message.Data;
+        zealMessageService.OnConnectionTerminated += (sender, e) => groupMembersByProcess.TryRemove(e.ProcessId, out _);
         zealMessageService.StartProcessing();
 
         try
@@ -90,15 +93,16 @@ partial class Program
             for (int i = 0; i < characterNames.Count; i++)
             {
                 Console.WriteLine($"{i + 1}: {characterNames[i]}{(characterNames[i] == selectedCharacterName ? " *" : "")}");
-                }
-                Console.WriteLine($"\nSpeech Speed: {speechRate} (-10 to 10)");
-                Console.WriteLine("+: Increase Speed  -: Decrease Speed");
-                Console.WriteLine("I: Ignore Player (pet messages)");
-                if (ignoredPlayers.Count > 0)
-                {
-                    Console.WriteLine($"   Ignored: {string.Join(", ", ignoredPlayers)}");
-                }
-                Console.WriteLine("X: Exit");
+            }
+            Console.WriteLine($"\nSpeech Speed: {speechRate} (-10 to 10)");
+            Console.WriteLine("+: Increase Speed  -: Decrease Speed");
+            Console.WriteLine("I: Ignore Player (pet messages)");
+            if (ignoredPlayers.Count > 0)
+            {
+                Console.WriteLine($"   Ignored: {string.Join(", ", ignoredPlayers)}");
+            }
+            Console.WriteLine($"C: Track pet-break for Enchanter, Druid and Necro only (requires /pipeverbose on): {(settingsManager.Settings.TrackCharmBreaksForCharmClassesOnly ? "On" : "Off")}");
+            Console.WriteLine("X: Exit");
         }
     }
 
@@ -115,8 +119,7 @@ partial class Program
             int index = (int)key - (int)ConsoleKey.D1;
             if (index < characterNames.Count)
             {
-                selectedCharacterName = characterNames[index];
-                settingsManager.UpdateSelectedCharacter(selectedCharacterName);
+                SelectCharacter(characterNames[index]);
             }
         }
         else if (key >= ConsoleKey.NumPad1 && key <= ConsoleKey.NumPad9)
@@ -124,8 +127,7 @@ partial class Program
             int index = (int)key - (int)ConsoleKey.NumPad1;
             if (index < characterNames.Count)
             {
-                selectedCharacterName = characterNames[index];
-                settingsManager.UpdateSelectedCharacter(selectedCharacterName);
+                SelectCharacter(characterNames[index]);
             }
         }
         else if (key == ConsoleKey.Add || key == ConsoleKey.OemPlus)
@@ -150,10 +152,27 @@ partial class Program
         {
             AddIgnoredPlayer();
         }
+        else if (key == ConsoleKey.C)
+        {
+            lock (syncLock)
+            {
+                settingsManager.UpdateCharmBreakClassFilter(!settingsManager.Settings.TrackCharmBreaksForCharmClassesOnly);
+            }
+        }
         return true;
     }
 
-    private static void ZealMessageService_OnCharacterUpdated(object sender, ZealCharacter.ZealCharacterUpdatedEventArgs e)
+    private static void SelectCharacter(string characterName)
+    {
+        lock (syncLock)
+        {
+            selectedCharacterName = characterName;
+            previousGroup = null;
+            settingsManager.UpdateSelectedCharacter(characterName);
+        }
+    }
+
+    private static void ZealMessageService_OnCharacterUpdated(object? sender, ZealCharacter.ZealCharacterUpdatedEventArgs e)
     {
         var now = DateTime.Now;
         if (e.Character == null || e.Character.Detail.PlayerData == null || string.IsNullOrEmpty(e.Character.Name))
@@ -175,38 +194,21 @@ partial class Program
             MenuHeader();
         }
 
-        Task.Run(() => ProcessCharacterUpdate(e.Character));
+        ProcessCharacterUpdate(e.Character);
     }
 
     private static void ProcessCharacterUpdate(ZealCharacter character)
     {
-        if (selectedCharacterName == character.Name)
+        lock (syncLock)
         {
-            var group = character.ToGroup();
-            CheckPetHealthOrCharmBreak(group);
-            previousGroup = group;
-        }
-    }
-
-    private static void CheckPetHealthOrCharmBreak(Group currentGroup)
-    {
-        if (previousGroup == null) return;
-
-        foreach (var currentMember in currentGroup.Members)
-        {
-            var previousMember = previousGroup.Members.FirstOrDefault(m => m.Name == currentMember.Name);
-            if (previousMember == null) continue;
-
-            if (ignoredPlayers.Contains(currentMember.Name))
-                continue;
-
-            if (currentMember.PetHp == 0 && previousMember.PetHp > 10)
+            if (selectedCharacterName == character.Name)
             {
-                synth.SpeakAsync($"Charm Break {currentMember.Name}");
-            }
-            else if (currentMember.PetHp.Between(1, 19) && previousMember.PetHp > 19)
-            {
-                synth.SpeakAsync("Heal Pet");
+                groupMembersByProcess.TryGetValue(character.ProcessId, out var members);
+                var group = character.ToGroup(members);
+                foreach (var alert in PetAlertService.GetAlerts(previousGroup, group,
+                    settingsManager.Settings.TrackCharmBreaksForCharmClassesOnly, ignoredPlayers))
+                    synth.SpeakAsync(alert);
+                previousGroup = group;
             }
         }
     }

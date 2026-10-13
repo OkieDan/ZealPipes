@@ -9,4 +9,5 @@ public class GroupMember
 {
     public string Name { get; set; } = string.Empty;
     public int PetHp { get; set; }
+    public int? Class { get; set; }
 }

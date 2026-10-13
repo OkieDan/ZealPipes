@@ -5,6 +5,11 @@ A lightweight EverQuest pet monitoring tool that provides voice alerts for charm
 ## Features
 
 - **Charm Break Detection**: Alerts when a pet charm breaks (pet HP drops from >10% to 0%)
+- **Optional Class Filter**: Press `C` to track pet-breaks for Enchanters, Druids,
+  and Necromancers only. The option defaults to off and is saved between runs.
+  Enable `/pipeverbose on` in the monitored EQ client to provide group member
+  classes. With the filter on, other classes and members with an unknown class
+  do not trigger charm-break alerts. Low pet health warnings are unaffected.
 - **Low Pet Health Warning**: Alerts when pet HP drops below 20%
 - **Multi-Character Support**: Monitor multiple EQ characters simultaneously
 - **Voice Alerts**: Uses text-to-speech for immediate notifications

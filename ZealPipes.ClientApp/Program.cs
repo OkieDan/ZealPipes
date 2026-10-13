@@ -7,6 +7,8 @@ using ZealPipes.Services;
 using ZealPipes.Services.Helpers;
 using ZealPipes.Common;
 using System.Linq;
+using System.Diagnostics;
+using System.Threading;
 namespace ZealPipes.ClientApp
 {
     partial class Program
@@ -71,6 +73,7 @@ namespace ZealPipes.ClientApp
 
         #region Client Specific
         private static ConsoleKey _lastMenuOption;
+        private static long _rawLoggingUntil;
         private static void ClearHandlers(ZealMessageService zealMessageService)
         {
             zealMessageService.OnLogMessageReceived -= ZealMessageService_OnLogMessageReceived;
@@ -80,6 +83,7 @@ namespace ZealPipes.ClientApp
             zealMessageService.OnCharacterUpdated -= ZealMessageService_OnCharacterUpdated;
             zealMessageService.OnPipeCmdMessageReceived -= ZealMessageService_OnPipeCmdMessageReceived;
             zealMessageService.OnRaidMessageReceived -= ZealMessageService_OnRaidMessageReceived;
+            zealMessageService.OnRawDataReceived -= ZealMessageService_OnRawDataReceived;
         }
 
         private static void MenuHeader()
@@ -94,6 +98,7 @@ namespace ZealPipes.ClientApp
             Console.Write($"{(_lastMenuOption == ConsoleKey.D7 ? "  >" : "  ")}7:/Pipe");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D8 ? "  >" : "  ")}8:Raid");
             Console.Write($"{(_lastMenuOption == ConsoleKey.D9 ? "  >" : "  ")}9:Group");
+            Console.Write($"{(_lastMenuOption == ConsoleKey.R ? "  >" : "  ")}R:Raw (7 seconds)");
             Console.Write("   X:Exit\n");
         }
         private static bool ShowMenu(ZealMessageService zealMessageService)
@@ -166,6 +171,14 @@ namespace ZealPipes.ClientApp
                 ClearHandlers(zealMessageService);
                 zealMessageService.OnGroupMessageReceived += ZealMessageService_OnGroupMessageRecieved;
             }
+            if (key == ConsoleKey.R)
+            {
+                _lastMenuOption = ConsoleKey.R;
+                UseZealConsoleUi = false;
+                ClearHandlers(zealMessageService);
+                Interlocked.Exchange(ref _rawLoggingUntil, Stopwatch.GetTimestamp() + 7L * Stopwatch.Frequency);
+                zealMessageService.OnRawDataReceived += ZealMessageService_OnRawDataReceived;
+            }
 
             return true;
         }
@@ -181,8 +194,26 @@ namespace ZealPipes.ClientApp
                     Console.WriteLine($"GroupMember.Pos X >     {data.Position.X}");
                     Console.WriteLine($"GroupMember.Pos Y >     {data.Position.Y}");
                     Console.WriteLine($"GroupMember.Pos Z >     {data.Position.Z}");
+                    if (data.SpawnId.HasValue)
+                        Console.WriteLine($"GroupMember.SpawnId >  {data.SpawnId.Value}");
+                    if (data.HpCurrent.HasValue)
+                        Console.WriteLine($"GroupMember.HPCurrent > {data.HpCurrent.Value}");
+                    if (data.HpMax.HasValue)
+                        Console.WriteLine($"GroupMember.HPMax >     {data.HpMax.Value}");
+                    if (data.Class.HasValue)
+                        Console.WriteLine($"GroupMember.Class >      {data.Class.Value}");
+                    if (data.Level.HasValue)
+                        Console.WriteLine($"GroupMember.Level >      {data.Level.Value}");
+                    if (data.ZoneId.HasValue)
+                        Console.WriteLine($"GroupMember.ZoneId >    {data.ZoneId.Value}");
                 }
             }
+        }
+
+        private static void ZealMessageService_OnRawDataReceived(object sender, ZealMessageService.RawDataReceivedEventArgs e)
+        {
+            if (_lastMenuOption == ConsoleKey.R && Stopwatch.GetTimestamp() < Interlocked.Read(ref _rawLoggingUntil))
+                Console.Write(e.Data);
         }
 
         private static void ZealMessageService_OnPipeCmdMessageReceived(object sender, ZealMessageService.PipeCmdMessageReceivedEventArgs e)

@@ -13,6 +13,18 @@ namespace ZealPipes.Common.Models
             public float Heading { get; set; }
             [JsonPropertyName("name")]
             public string Name { get; set; }
+            [JsonPropertyName("spawn_id")]
+            public int? SpawnId { get; set; }
+            [JsonPropertyName("hp_current")]
+            public int? HpCurrent { get; set; }
+            [JsonPropertyName("hp_max")]
+            public int? HpMax { get; set; }
+            [JsonPropertyName("class")]
+            public int? Class { get; set; }
+            [JsonPropertyName("level")]
+            public int? Level { get; set; }
+            [JsonPropertyName("zone_id")]
+            public int? ZoneId { get; set; }
         }
         public GroupMessage(string character, string pipeMessageData)
         {

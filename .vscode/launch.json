@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug ZealPipes ClientApp",
+      "type": "clr",
+      "request": "launch",
+      "program": "${workspaceFolder}/ZealPipes.ClientApp/bin/Debug/ZealPipes.ClientApp.exe",
+      "cwd": "${workspaceFolder}/ZealPipes.ClientApp/bin/Debug",
+      "console": "externalTerminal",
+      "preLaunchTask": "Build ZealPipes ClientApp"
+    }
+  ]
+}

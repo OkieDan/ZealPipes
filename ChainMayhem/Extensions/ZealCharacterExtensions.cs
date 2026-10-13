@@ -6,8 +6,9 @@ namespace ChainMayhem.Extensions;
 
 public static class ZealCharacterExtensions
 {
-    public static Group ToGroup(this ZealCharacter character)
+    public static Group ToGroup(this ZealCharacter character, IEnumerable<GroupMessage.GroupData>? groupMembers = null)
     {
+        var members = groupMembers?.ToArray() ?? Array.Empty<GroupMessage.GroupData>();
         var group = new Group
         {
             Members = new List<GroupMember>()
@@ -21,7 +22,8 @@ public static class ZealCharacterExtensions
             group.Members.Add(new GroupMember
             {
                 Name = character.Name,
-                PetHp = playerPetHp
+                PetHp = playerPetHp,
+                Class = GetPlayerClass(character)
             });
         }
 
@@ -38,10 +40,27 @@ public static class ZealCharacterExtensions
                 group.Members.Add(new GroupMember
                 {
                     Name = name,
-                    PetHp = memberPetHp
+                    PetHp = memberPetHp,
+                    Class = members.FirstOrDefault(member =>
+                        string.Equals(member.Name, name, StringComparison.OrdinalIgnoreCase))?.Class
                 });
             }
         }
         return group;
+    }
+
+    private static int? GetPlayerClass(ZealCharacter character)
+    {
+        var value = character.Detail.LabelData.FirstOrDefault(ld => ld.Type == LabelType.Class)?.Value?.Trim();
+        if (Enum.TryParse<ClassTypes>(value, true, out var playerClass))
+            return (int)playerClass;
+
+        return value?.ToUpperInvariant() switch
+        {
+            "ENC" => (int)ClassTypes.Enchanter,
+            "DRU" => (int)ClassTypes.Druid,
+            "NEC" => (int)ClassTypes.Necromancer,
+            _ => null
+        };
     }
 }

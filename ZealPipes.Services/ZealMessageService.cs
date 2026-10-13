@@ -27,6 +27,19 @@ namespace ZealPipes.Services
         public event EventHandler<ConnectionTerminatedEventArgs> OnConnectionTerminated;
         public event EventHandler<RaidMessageReceivedEventArgs> OnRaidMessageReceived;
         public event EventHandler<GroupMessageReceivedEventArgs> OnGroupMessageReceived;
+        public event EventHandler<RawDataReceivedEventArgs> OnRawDataReceived;
+
+        public class RawDataReceivedEventArgs : EventArgs
+        {
+            public int ProcessId { get; }
+            public string Data { get; }
+
+            public RawDataReceivedEventArgs(int processId, string data)
+            {
+                ProcessId = processId;
+                Data = data;
+            }
+        }
         
         public ZealMessageService(IConfiguration configuration, ProcessMonitor processMonitor, ZealPipeReader zealPipeReader)
         {
@@ -34,6 +47,7 @@ namespace ZealPipes.Services
             _zealPipeReader = zealPipeReader;
             _processMonitor.OnNewProcessFound += ProcessMonitor_OnNewProcessFound;
             _zealPipeReader.OnPipeMessageReceived += ZealPipeReader_OnPipeMessageReceived;
+            _zealPipeReader.OnRawDataReceived += ZealPipeReader_OnRawDataReceived;
             _zealPipeReader.OnConnectionTerminated += ZealPipeReader_OnConnectionTerminated;
             StartProcessing();
         }
@@ -44,6 +58,7 @@ namespace ZealPipes.Services
             _zealPipeReader = zealPipeReader;
             _processMonitor.OnNewProcessFound += ProcessMonitor_OnNewProcessFound;
             _zealPipeReader.OnPipeMessageReceived += ZealPipeReader_OnPipeMessageReceived;
+            _zealPipeReader.OnRawDataReceived += ZealPipeReader_OnRawDataReceived;
             _zealPipeReader.OnConnectionTerminated += ZealPipeReader_OnConnectionTerminated;
             StartProcessing();
         }
@@ -51,6 +66,11 @@ namespace ZealPipes.Services
         private void ZealPipeReader_OnConnectionTerminated(object sender, ConnectionTerminatedEventArgs e)
         {
             OnConnectionTerminated?.Invoke(this, e);
+        }
+
+        private void ZealPipeReader_OnRawDataReceived(object sender, ZealPipeReader.RawDataReceivedEventArgs e)
+        {
+            OnRawDataReceived?.Invoke(this, new RawDataReceivedEventArgs(e.ProcessId, e.Data));
         }
 
         private void ProcessMonitor_OnNewProcessFound(object sender, ProcessMonitor.NewProcessFoundEvent e)

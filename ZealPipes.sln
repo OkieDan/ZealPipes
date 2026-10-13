@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.ClientApp", "ZealPipes.ClientApp\ZealPipes.ClientApp.csproj", "{4B968024-037E-4637-83B8-11D615BCC090}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZealPipes.ClientApp", "ZealPipes.ClientApp\ZealPipes.ClientApp.csproj", "{4B968024-037E-4637-83B8-11D615BCC090}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZealPipes.Services", "ZealPipes.Services\ZealPipes.Services.csproj", "{4F7FEAE1-195D-47A2-9FA3-004F8FBD0C57}"
 EndProject
@@ -12,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZealPipes.ServerTickClient", "ZealPipes.ServerTickClient\ZealPipes.ServerTickClient.csproj", "{A7CB2B97-921F-43BA-95DD-EA335D4BBE56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChainMayhem", "ChainMayhem\ChainMayhem.csproj", "{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZealPipes.Common.Tests", "ZealPipes.Common.Tests\ZealPipes.Common.Tests.csproj", "{9C042675-D722-40D4-A97D-7E7D4FAE9A43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChainMayhem.Tests", "ChainMayhem.Tests\ChainMayhem.Tests.csproj", "{3FEF2751-4AF5-4460-A7D0-D74F592C5D3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AABA1BF-A119-A119-6F2F-0ACD4A32BCF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C042675-D722-40D4-A97D-7E7D4FAE9A43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FEF2751-4AF5-4460-A7D0-D74F592C5D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FEF2751-4AF5-4460-A7D0-D74F592C5D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FEF2751-4AF5-4460-A7D0-D74F592C5D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FEF2751-4AF5-4460-A7D0-D74F592C5D3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
